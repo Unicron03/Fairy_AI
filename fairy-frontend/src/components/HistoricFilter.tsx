@@ -39,7 +39,7 @@ export function HistoricFilter({search, setSearch}: SearchingProps) {
                         className="p-2 bg-gray-100 dark:bg-[#27272a]"
                         title="Supprimer le filtre"
                     >
-                    <Eraser className="hover:opacity-60" />
+                        <Eraser className="hover:opacity-60" />
                     </button>
                 </div>
             </div>

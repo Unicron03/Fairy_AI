@@ -201,7 +201,7 @@ function AskForm() {
 
   // Filtre l'historique en fonction de la recherche
   const filteredHistory = history.filter((entry) =>
-    entry.question.toLowerCase().includes(search.toLowerCase())
+    entry.question.toLowerCase().includes(search.toLowerCase()) || entry.answer.toLowerCase().includes(search.toLowerCase())
   );
 
   // A VOIR SI TOUJOURS UTILE
