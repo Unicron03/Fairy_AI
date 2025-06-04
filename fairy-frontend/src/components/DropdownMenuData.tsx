@@ -14,10 +14,11 @@ import {
   DropdownMenuRadioItem
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
-import { Paperclip, Database } from "lucide-react"
+import { Paperclip } from "lucide-react"
 import { useRef, useState } from "react"
 import React from "react"
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
+import DataVisualizer from "./DataVisualizer"
 
 type DropdownMenuDataProps = {
   file: File | null;
@@ -33,25 +34,30 @@ export default function PopupDatas({ file, setFile, checked, setChecked }: Dropd
   const [localFile, setLocalFile] = useState<File | null>(file);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = e.target.files?.[0]
+    const selectedFile = e.target.files?.[0];
+
     if (selectedFile) {
-      setLocalFile(selectedFile)
-      setFile(selectedFile)
+      setLocalFile(selectedFile);
+      setFile(selectedFile);
+      setPosition("");
+
+      // Réinitialise la valeur de l’input pour permettre une réimportation du même fichier plus tard
+      e.target.value = "";
     }
-  }
+  };
 
   const handlePredefinedCsvSelect = (value: string) => {
-    setPosition(value)
+    setPosition(value);
   
-    const fakeContent = `Contenu fictif de ${value}.csv`
-    const blob = new Blob([fakeContent], { type: "text/csv" })
-    const fakeFile = new File([blob], `${value}.csv`, { type: "text/csv" })
+    const fakeContent = `Contenu fictif de ${value}.csv`;
+    const blob = new Blob([fakeContent], { type: "text/csv" });
+    const fakeFile = new File([blob], `${value}.csv`, { type: "text/csv" });
   
-    setLocalFile(fakeFile)
-    setFile(fakeFile)
+    setLocalFile(fakeFile);
+    setFile(fakeFile);
   
-    console.log(`Fichier pré-défini sélectionné : /csv/${value}.csv`)
-  }  
+    console.log(`Fichier pré-défini sélectionné : /csv/${value}.csv`);
+  }
 
   return (
     <>
@@ -64,9 +70,7 @@ export default function PopupDatas({ file, setFile, checked, setChecked }: Dropd
             <div className="flex items-center justify-between">
               <span>Mes données</span>
               {file ? 
-                <button className="hover:opacity-60" title="Visualiser le jeu">
-                  <Database size={20}  />
-                </button>
+                <DataVisualizer file={file} />
               : null}
             </div>
           </DropdownMenuLabel>
