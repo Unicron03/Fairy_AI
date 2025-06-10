@@ -1,13 +1,40 @@
 // src/components/HistoryCard.tsx
-import React, { useState } from "react";
+import React, { JSX, ReactNode, useState } from "react";
 import { Copy, Check } from "lucide-react";
 
+// (string | JSX.Element)[] for filter response in bold with <strong>
 type HistoryCardProps = {
-  question: string;
-  answer: string | React.ReactElement;
+  question: string | (string | JSX.Element)[];
+  answer: string | (string | JSX.Element)[] | React.ReactElement;
+  tokens?: number;
+  duration?: number;
 };
 
-const HistoryCard: React.FC<HistoryCardProps> = ({ question, answer }) => {
+function formatDuration(duration: number): string {
+    const minutes = Math.floor(duration / 60);
+    const seconds = Math.round(duration % 60);
+    const paddedSeconds = seconds < 10 ? `0${seconds}` : seconds;
+
+    if (minutes > 0) {
+        return `${minutes}min${paddedSeconds}s`;
+    } else {
+        return `${seconds}s`;
+    }
+}
+
+/**
+ * Transforme n'importe quel ReactNode en string brute
+ */
+function flattenText(node: ReactNode): string {
+  if (node == null || typeof node === "boolean") return "";
+  if (typeof node === "string" || typeof node === "number") return String(node);
+  if (Array.isArray(node)) return node.map(flattenText).join("");
+  if (React.isValidElement(node)) return flattenText((node.props as { children?: ReactNode }).children);
+  
+  return "";
+}
+
+const HistoryCard: React.FC<HistoryCardProps> = ({ question, answer, tokens, duration }) => {
     const [copiedAnswer, setCopiedAnswer] = useState(false);
     const [copiedQuestion, setCopiedQuestion] = useState(false);
 
@@ -34,11 +61,11 @@ const HistoryCard: React.FC<HistoryCardProps> = ({ question, answer }) => {
                 <span className="whitespace-pre-wrap" style={{paddingBlock: "28px"}}>{question}</span>
 
                 <button
-                    onClick={() => copyText(question, true)}
+                    onClick={() => copyText(flattenText(question), true)}
                     className="absolute -bottom-8 right-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
                     title="Copier la question"
                     >
-                    {copiedQuestion ? <Check /> : <Copy />}
+                    {copiedQuestion ? <Check /> : <Copy className="hover:opacity-60" />}
                 </button>
             </div>
 
@@ -47,19 +74,23 @@ const HistoryCard: React.FC<HistoryCardProps> = ({ question, answer }) => {
                 style={{ position: "relative" }}
             >
                 <span className="whitespace-pre-wrap" style={{paddingBlock: "12px"}}>{answer}</span>
+                <br />
+                {(duration !== undefined && tokens !== undefined) && (
+                    <span style={{ fontSize: "small", color: "darkgray" }}>
+                        {formatDuration(duration)} | {tokens} tokens
+                    </span>
+                )}
 
-                {typeof answer === "string" && (
+                {!React.isValidElement(answer) && (
                     <button
-                        onClick={() => copyText(answer, false)}
+                        onClick={() => copyText(flattenText(answer), false)}
                         className="absolute -bottom-8 left-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
                         title="Copier la réponse"
                     >
-                        {copiedAnswer ? <Check /> : <Copy />}
+                        {copiedAnswer ? <Check /> : <Copy className="hover:opacity-60" />}
                     </button>
                 )}
             </div>
-
-            {/* <hr /> */}
         </div>
     );
 };

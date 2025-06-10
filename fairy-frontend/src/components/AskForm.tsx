@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, JSX } from "react";
 import axios from "axios";
 import { SendHorizonal, CircleStop, ArrowDown } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
@@ -7,6 +7,19 @@ import { HashLoader } from "react-spinners";
 import { ToastContainer, toast } from 'react-toastify';
 import DropdownMenuData from "./DropdownMenuData";
 import { HistoricFilter } from "./HistoricFilter";
+
+function highlightMatch(text: string, search: string): string | (string | JSX.Element)[] {
+  if (!search) return text;
+
+  const regex = new RegExp(`(${search})`, 'gi');
+  return text.split(regex).map((part, index) =>
+    part.toLowerCase() === search.toLowerCase() ? (
+      <strong key={index} className="font-bold">{part}</strong>
+    ) : (
+      part
+    )
+  );
+}
 
 function AskForm() {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -20,7 +33,7 @@ function AskForm() {
   const [csvTable, setCsvTable] = useState<string[][]>([]);
   const [question, setQuestion] = useState<string>("");
   const [answer, setAnswer] = useState<string>("");
-  const [history, setHistory] = useState<{ question: string; answer: string }[]>([]);
+  const [history, setHistory] = useState<{ question: string, answer: string, tokens: number, duration: number }[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [hasLoadedHistory, setHasLoadedHistory] = useState<boolean>(false);
   const [search, setSearch] = useState<string>("");
@@ -134,7 +147,7 @@ function AskForm() {
           }, { signal });
 
           setAnswer(res.data.answer);
-          setHistory((prev) => [...prev, { question, answer: res.data.answer }]);
+          setHistory((prev) => [...prev, { question, answer: res.data.answer, tokens: res.data.tokens_used, duration: res.data.duration }]);
           setPendingQuestion(null);
         } catch (err) {
           if (axios.isCancel(err)) {
@@ -160,7 +173,7 @@ function AskForm() {
         }, { signal });
 
         setAnswer(res.data.answer);
-        setHistory((prev) => [...prev, { question, answer: res.data.answer }]);
+        setHistory((prev) => [...prev, { question, answer: res.data.answer, tokens: res.data.tokens_used, duration: res.data.duration }]);
         setPendingQuestion(null);
       } catch (err) {
         if (axios.isCancel(err)) {
@@ -200,12 +213,9 @@ function AskForm() {
   };
 
   // Filtre l'historique en fonction de la recherche
-  const filteredHistory = history.filter((entry) =>
+  const paginatedHistory = history.filter((entry) =>
     entry.question.toLowerCase().includes(search.toLowerCase()) || entry.answer.toLowerCase().includes(search.toLowerCase())
   );
-
-  // A VOIR SI TOUJOURS UTILE
-  const paginatedHistory = filteredHistory.slice();
 
   // Ajuste la hauteur de l'input de la question en fonction de son contenu
   const adjustTextareaHeight = () => {
@@ -266,7 +276,7 @@ function AskForm() {
         style={{gap: "10px", paddingBottom: inputHeight}}
       >
         {paginatedHistory.map((entry, index) => (
-          <HistoryCard key={index} question={entry.question} answer={entry.answer} />
+          <HistoryCard key={index} question={highlightMatch(entry.question, search)} answer={highlightMatch(entry.answer, search)} tokens={entry.tokens} duration={entry.duration} />
         ))}
 
         {pendingQuestion && (
