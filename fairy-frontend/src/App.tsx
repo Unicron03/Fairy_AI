@@ -1,5 +1,28 @@
-import React from "react";
 import AskForm from "./components/AskForm";
+
+export type FileType = {
+  value: string
+  label: string
+}
+
+export const preImportedFiles: FileType[] = [
+  {
+    value: "gestion-locative",
+    label: "Gestion locative",
+  },
+  {
+    value: "gestion-patrimoine",
+    label: "Gestion patrimoine",
+  },
+  {
+    value: "bons-commande",
+    label: "Bons de commande",
+  },
+  {
+    value: "suivi-budgetaire",
+    label: "Suivi budgétaire",
+  }
+]
 
 function App() {
   return (

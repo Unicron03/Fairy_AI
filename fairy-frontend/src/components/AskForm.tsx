@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useRef, JSX } from "react";
 import axios from "axios";
-import { SendHorizonal, CircleStop, ArrowDown } from "lucide-react";
+import { SendHorizonal, CircleStop, ArrowDown, Info } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
 import HistoryCard from "./HistoryCard";
 import { HashLoader } from "react-spinners";
 import { ToastContainer, toast } from 'react-toastify';
 import DropdownMenuData from "./DropdownMenuData";
 import { HistoricFilter } from "./HistoricFilter";
+import InfoPanel from "./InfoPanel";
 
 function highlightMatch(text: string, search: string): string | (string | JSX.Element)[] {
   if (!search) return text;
@@ -341,6 +342,8 @@ function AskForm() {
             onChange={handleCsvImport}
           />
           <div className="divAttachSend">
+            <InfoPanel/>
+
             <DropdownMenuData file={file} setFile={setFile} checked={checked} setChecked={setChecked}></DropdownMenuData>
 
             {loading ? (

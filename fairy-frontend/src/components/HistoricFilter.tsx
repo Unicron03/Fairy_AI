@@ -1,4 +1,4 @@
-import { Eraser } from "lucide-react";
+import { Search, Eraser } from "lucide-react";
 
 type SearchingProps = {
     search: string;
@@ -19,14 +19,17 @@ export function HistoricFilter({search, setSearch}: SearchingProps) {
                 <div
                     className="bg-white dark:bg-[#09090b]"
                     style={{
-                    display: "flex",
-                    borderRadius: "30%",
-                    boxShadow: "3px 3px 19px 1px rgba(0, 0, 0, 0.44)",
+                        display: "flex",
+                        borderRadius: "30%",
+                        boxShadow: "3px 3px 19px 1px rgba(0, 0, 0, 0.44)",
                     }}
                 >
+                    {/* <button disabled style={{ borderRadius: "8px 0 0 8px" }} className="p-2 bg-gray-100 dark:bg-[#27272a]">
+                        <Search />
+                    </button> */}
                     <input
                         type="text"
-                        placeholder="Rechercher une question..."
+                        placeholder="Chercher une question..."
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                         style={{ borderRadius: "8px 0 0 8px" }}

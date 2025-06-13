@@ -14,11 +14,12 @@ import {
   DropdownMenuRadioItem
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
-import { Paperclip } from "lucide-react"
+import { Paperclip, ChevronsUpDown } from "lucide-react"
 import { useRef, useState } from "react"
 import React from "react"
 import { toast } from 'react-toastify';
 import DataVisualizer from "./DataVisualizer"
+import { FileType, preImportedFiles } from "@/App"
 
 type DropdownMenuDataProps = {
   file: File | null;
@@ -95,10 +96,14 @@ export default function PopupDatas({ file, setFile, checked, setChecked }: Dropd
                 value={position}
                 onValueChange={handlePredefinedCsvSelect}
               >
-                <DropdownMenuRadioItem value="gestion-locative">Gestion locative</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="gestion-patrimoine">Gestion Patrimoine</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="bons-commande">Bons de commande</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="suivi-budgetaire">Suivi budgétaire</DropdownMenuRadioItem>
+                {preImportedFiles.map((status) => (
+                  <DropdownMenuRadioItem
+                      key={status.value}
+                      value={status.value}
+                  >
+                      {status.label}
+                  </DropdownMenuRadioItem>
+                ))}
               </DropdownMenuRadioGroup>
               </DropdownMenuSubContent>
             </DropdownMenuSub>

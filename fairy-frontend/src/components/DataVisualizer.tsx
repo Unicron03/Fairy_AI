@@ -71,7 +71,7 @@ export default function DataVisualizer({ file }: { file: File | null }) {
         <Dialog>
             <DialogTrigger asChild>
                 <button title="Visualiser les données">
-                <Database size={20} className="cursor-pointer hover:opacity-60" />
+                    <Database size={20} className="cursor-pointer hover:opacity-60" />
                 </button>
             </DialogTrigger>
             <DialogContent
@@ -79,10 +79,10 @@ export default function DataVisualizer({ file }: { file: File | null }) {
                 style={{ scrollbarColor: "#80808057 transparent" }}
             >
                 <DialogHeader>
-                <DialogTitle>Données importées</DialogTitle>
-                <DialogDescription>
-                    Fichier : {file?.name || "Aucun fichier"}
-                </DialogDescription>
+                    <DialogTitle>Données importées</DialogTitle>
+                    <DialogDescription>
+                        Fichier : {file?.name || "Aucun fichier"}
+                    </DialogDescription>
                 </DialogHeader>
                 <div className="overflow-auto max-h-[60vh]">
                     <table className="w-full table-auto border-collapse">
