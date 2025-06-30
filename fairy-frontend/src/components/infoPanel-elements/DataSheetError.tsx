@@ -107,7 +107,14 @@ export default function DataSheetError({ open, setOpen }: openProps) {
 
       {/* Formulaire Shadcn UI */}
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <form 
+            onSubmit={(e) => {
+                e.preventDefault();
+                e.stopPropagation(); // ← stoppe l'événement vers le form parent
+                form.handleSubmit(onSubmit)(e);
+            }}
+            className="space-y-6"
+        >
           <FormField
             control={form.control}
             name="problem"

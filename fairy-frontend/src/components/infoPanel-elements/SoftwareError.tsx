@@ -50,7 +50,14 @@ export default function SoftwareError() {
     <div className="space-y-6">
       {/* Formulaire Shadcn UI */}
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            e.stopPropagation(); // ← stoppe l'événement vers le form parent
+            form.handleSubmit(onSubmit)(e);
+          }}
+          className="space-y-6"
+        >
           <FormField
             control={form.control}
             name="problem"
