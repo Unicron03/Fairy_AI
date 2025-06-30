@@ -14,12 +14,12 @@ import {
   DropdownMenuRadioItem
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
-import { Paperclip, ChevronsUpDown } from "lucide-react"
+import { Paperclip } from "lucide-react"
 import { useRef, useState } from "react"
 import React from "react"
 import { toast } from 'react-toastify';
 import DataVisualizer from "./DataVisualizer"
-import { FileType, preImportedFiles } from "@/App"
+import { preImportedFiles } from "@/App"
 
 type DropdownMenuDataProps = {
   file: File | null;

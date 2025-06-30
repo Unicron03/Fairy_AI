@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, JSX } from "react";
 import axios from "axios";
-import { SendHorizonal, CircleStop, ArrowDown, Info } from "lucide-react";
+import { SendHorizonal, CircleStop, ArrowDown } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
 import HistoryCard from "./HistoryCard";
 import { HashLoader } from "react-spinners";
@@ -369,7 +369,8 @@ function AskForm() {
       {/* Bouton pour revenir en bas de l'histo */}
       {!atBottom && (
         <div
-          className="mx-auto sticky bottom-[115px] right-4 z-50 cursor-pointer bg-gray-200 dark:bg-gray-800 p-2 rounded-full shadow-lg" style={{ display: isScrolledToBottom() ? 'none' : 'block', zIndex: 50 }}
+          className="mx-auto sticky bottom-[115px] right-4 z-50 cursor-pointer bg-gray-200 dark:bg-gray-800 p-2 rounded-full shadow-lg animate-bounce"
+          style={{ display: isScrolledToBottom() ? 'none' : 'block', zIndex: 50 }}
           onClick={scrollToBottom}
           title="Aller en bas"
         >
