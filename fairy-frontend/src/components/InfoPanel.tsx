@@ -13,9 +13,15 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/components/ui/avatar"
 import { Info } from "lucide-react"
 import DataSheetError from "./infoPanel-elements/DataSheetError";
 import SoftwareError from "./infoPanel-elements/SoftwareError";
+import MarkdownViewer from "./MarkdownViewer";
 
 export default function InfoPanel() {
     const [open, setOpen] = React.useState(false)
@@ -28,7 +34,7 @@ export default function InfoPanel() {
                 </button>
             </DialogTrigger>
             <DialogContent
-                className="bg-[#f5f5f5] dark:bg-[#27272a] w-fit h-fit"
+                className="bg-[#f5f5f5] dark:bg-[#27272a] w-fit max-h-[80vh] h-auto"
                 style={{ scrollbarColor: "#80808057 transparent" }}
             >
                 <DialogHeader>
@@ -38,8 +44,17 @@ export default function InfoPanel() {
                         <Accordion type="single" collapsible>
                             <AccordionItem value="item-1">
                                 <AccordionTrigger>Voir la documentation</AccordionTrigger>
-                                <AccordionContent>
-                                    Une super documentation
+                               <AccordionContent className="max-h-[50vh] overflow-y-auto">
+                                    <div className="flex flex-col gap-4">
+                                        <MarkdownViewer filePath="documentations/app.md" />
+                                        <p>Contributeurs au projet FAIry :</p>
+                                        <div className="*:data-[slot=avatar]:ring-background flex -space-x-3 *:data-[slot=avatar]:ring-3 *:data-[slot=avatar]:grayscale">
+                                            <Avatar onClick={() => window.open("https://github.com/unicron03")} className="cursor-pointer" title="Evdp">
+                                                <AvatarImage src="https://github.com/unicron03.png" alt="@unicron" />
+                                                <AvatarFallback>Evdp</AvatarFallback>
+                                            </Avatar>
+                                        </div>
+                                    </div>
                                 </AccordionContent>
                             </AccordionItem>
                             <AccordionItem value="item-2">

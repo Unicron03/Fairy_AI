@@ -64,7 +64,7 @@ export default function PopupDatas({ file, setFile, checked, setChecked }: Dropd
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button className="hover:opacity-60 outline-[#3a3a3a] dark:outline-white" style={{outlineWidth: "0.15rem"}}>Données</Button>
+          <Button title="Panneau des données" className="hover:opacity-60 outline-[#3a3a3a] dark:outline-white" style={{outlineWidth: "0.15rem"}}>Données</Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-64">
           <DropdownMenuLabel>

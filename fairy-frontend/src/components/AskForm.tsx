@@ -8,6 +8,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import DropdownMenuData from "./DropdownMenuData";
 import { HistoricFilter } from "./HistoricFilter";
 import InfoPanel from "./InfoPanel";
+import ExportDialog from "./ExportDialog";
 
 function highlightMatch(text: string, search: string): string | (string | JSX.Element)[] {
   if (!search) return text;
@@ -301,6 +302,11 @@ function AskForm() {
             scrollbarColor: "#80808057 transparent"
           }}
         >
+          <div className="flex gap-4 divAttachSend">
+            <InfoPanel/>
+            <ExportDialog history={history} author="Enzo Vandepoele" />
+          </div>
+          
           <div style={{width: "-webkit-fill-available"}}>
             <textarea
               ref={textareaRef}
@@ -342,8 +348,6 @@ function AskForm() {
             onChange={handleCsvImport}
           />
           <div className="divAttachSend">
-            <InfoPanel/>
-
             <DropdownMenuData file={file} setFile={setFile} checked={checked} setChecked={setChecked}></DropdownMenuData>
 
             {loading ? (
