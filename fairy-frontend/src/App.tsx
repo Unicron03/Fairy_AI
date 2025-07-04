@@ -1,4 +1,6 @@
 import AskForm from "./components/AskForm";
+import { SidebarProvider, useSidebar } from "@/components/ui/sidebar"
+import { AppSidebar } from "@/components/Sidebar"
 
 export type FileType = {
   value: string
@@ -24,15 +26,32 @@ export const preImportedFiles: FileType[] = [
   }
 ]
 
-function App() {
+
+function Layout() {
+  const { state } = useSidebar();
+  const sidebarWidth = state === "collapsed" ? "0rem" : "15.5rem";
+
   return (
-    <div className="min-h-screen bg-white text-black dark:bg-[#09090b] dark:text-white transition-colors duration-300">
+    <div className="flex min-h-screen w-full">
+      {/* Sidebar avec largeur dynamique */}
+      <div className="flex z-50" style={{ width: sidebarWidth }}>
+        <AppSidebar />
+      </div>
+
       {/* Contenu principal */}
-      <main className="p-8">
-        <AskForm />
-      </main>
+      <div className="flex-1 flex flex-col">
+            <main>
+              <AskForm />
+            </main>
+      </div>
     </div>
   );
 }
 
-export default App;
+export default function App() {
+  return (
+    <SidebarProvider defaultOpen={localStorage.getItem("sidebar-state") === "open"}>
+      <Layout />
+    </SidebarProvider>
+  );
+}

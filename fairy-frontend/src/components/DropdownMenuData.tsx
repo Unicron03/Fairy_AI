@@ -29,7 +29,7 @@ type DropdownMenuDataProps = {
   setChecked: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export default function PopupDatas({ file, setFile, checked, setChecked }: DropdownMenuDataProps) {
+export default function DropdownMenuData({ file, setFile, checked, setChecked }: DropdownMenuDataProps) {
   const [position, setPosition] = React.useState("locative");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [localFile, setLocalFile] = useState<File | null>(file);
@@ -61,7 +61,7 @@ export default function PopupDatas({ file, setFile, checked, setChecked }: Dropd
   }
 
   return (
-    <>
+    <div className="">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button title="Panneau des données" className="hover:opacity-60 outline-[#3a3a3a] dark:outline-white" style={{outlineWidth: "0.15rem"}}>Données</Button>
@@ -119,6 +119,6 @@ export default function PopupDatas({ file, setFile, checked, setChecked }: Dropd
         className="hidden"
         onChange={handleFileChange}
       />
-    </>
+    </div>
   )
 }

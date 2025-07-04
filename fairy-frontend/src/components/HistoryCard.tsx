@@ -4,10 +4,11 @@ import { Copy, Check } from "lucide-react";
 
 // (string | JSX.Element)[] for filter response in bold with <strong>
 type HistoryCardProps = {
-  question: string | (string | JSX.Element)[];
-  answer: string | (string | JSX.Element)[] | React.ReactElement;
-  tokens?: number;
-  duration?: number;
+    index?: number;
+    question: string | (string | JSX.Element)[];
+    answer: string | (string | JSX.Element)[] | React.ReactElement;
+    tokens?: number;
+    duration?: number;
 };
 
 function formatDuration(duration: number): string {
@@ -34,7 +35,7 @@ function flattenText(node: ReactNode): string {
   return "";
 }
 
-const HistoryCard: React.FC<HistoryCardProps> = ({ question, answer, tokens, duration }) => {
+const HistoryCard: React.FC<HistoryCardProps> = ({ index, question, answer, tokens, duration }) => {
     const [copiedAnswer, setCopiedAnswer] = useState(false);
     const [copiedQuestion, setCopiedQuestion] = useState(false);
 
@@ -57,6 +58,7 @@ const HistoryCard: React.FC<HistoryCardProps> = ({ question, answer, tokens, dur
         >
             <div
                 className="relative group max-w-[500px] w-fit self-end mb-[20px] p-4 bg-gray-100 dark:bg-[#27272a] rounded-[calc(4px+0.75rem)]"
+                style={{zIndex: index == 0 ? 50 : 0}}
             >
                 <span className="whitespace-pre-wrap" style={{paddingBlock: "28px"}}>{question}</span>
 

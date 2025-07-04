@@ -9,6 +9,7 @@ import DropdownMenuData from "./DropdownMenuData";
 import { HistoricFilter } from "./HistoricFilter";
 import InfoPanel from "./InfoPanel";
 import ExportDialog from "./ExportDialog";
+import { SidebarTrigger, useSidebar } from "./ui/sidebar";
 
 function highlightMatch(text: string, search: string): string | (string | JSX.Element)[] {
   if (!search) return text;
@@ -26,9 +27,10 @@ function highlightMatch(text: string, search: string): string | (string | JSX.El
 function AskForm() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const divQuestionRef = useRef<HTMLDivElement>(null);
   
   const MAX_HEIGHT_QUESTION_AREA = 300;
-  const MARGIN_HISTORY_QUESTION_PANEL = 110;
+  const MARGIN_HISTORY_QUESTION_PANEL = 30;
 
   const [file, setFile] = useState<File | null>(null);
   const [checked, setChecked] = useState<boolean>(false);
@@ -41,23 +43,12 @@ function AskForm() {
   const [search, setSearch] = useState<string>("");
   const [useCsv, setUseCsv] = useState<boolean>(false);
   const [inputHeight, setInputHeight] = useState(MARGIN_HISTORY_QUESTION_PANEL);
+  const [arrowdownBottom, setArrowdownBottom] = useState(divQuestionRef.current?.offsetHeight);
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const historyRef = useRef<HTMLDivElement>(null);
   const [pendingQuestion, setPendingQuestion] = useState<string | null>(null);
   const [abortController, setAbortController] = useState<AbortController | null>(null);
   const [atBottom, setAtBottom] = useState(true);
-
-  // Ecouter l'évènement de scroll
-  useEffect(() => {
-    const handleScroll = () => {
-      const app = document.getElementById("app")?.clientHeight;
-      if (!app) return;
-      setAtBottom(window.scrollY + window.innerHeight + 200 >= app);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
   // Récupère l'historique du cache
   useEffect(() => {
@@ -232,14 +223,13 @@ function AskForm() {
   const handleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     e.target.style.height = 'auto';
     e.target.style.height = e.target.scrollHeight + 'px';
-    setInputHeight(Math.min(e.target.scrollHeight, MAX_HEIGHT_QUESTION_AREA) + (MARGIN_HISTORY_QUESTION_PANEL - 40));
+    // setInputHeight(Math.min(e.target.scrollHeight, MAX_HEIGHT_QUESTION_AREA) + (MARGIN_HISTORY_QUESTION_PANEL - 40));
+    setArrowdownBottom(Math.min(e.target.scrollHeight, MAX_HEIGHT_QUESTION_AREA) + (MARGIN_HISTORY_QUESTION_PANEL + 60));
     
-    if (isScrolledToBottom()) {
-      requestAnimationFrame(() => {
-        scrollToBottom();
-      });
-    }    
-  };
+    requestAnimationFrame(() => {
+      scrollToBottom();
+    });
+};
 
   // Scroll vers le bas de la page
   const scrollToBottom = () => {
@@ -253,32 +243,39 @@ function AskForm() {
   
     return () => clearTimeout(timeout);
   };
-  
-  // Vérifie si l'utilisateur est en bas de la page
-  const isScrolledToBottom = () => {
-    const app = document.getElementById("app")?.clientHeight;
-    if (!app) return;
-    return window.scrollY + window.innerHeight + 200 >= app;
-  };
+
+  const actionScroll = () => {
+    const el = historyRef.current;
+    if (!el) return;
+
+    const nearBottom = el.scrollTop + el.clientHeight + 200 >= el.scrollHeight;
+    setAtBottom(nearBottom);
+  }
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="h-screen flex flex-col">
       {/* Logo */}
-      <header style={{padding: "5px 15px"}} className="fixed top-0 left-0 right-0 bg-white dark:bg-[#09090b] z-30 flex justify-between items-center shadow-[0px_4px_31px_29px_rgb(255,255,255)] dark:shadow-[0px_4px_31px_29px_rgb(9,9,11)]">
-        <ThemeToggle />
-        <img style={{height: "70px"}} src="src/logo.png"></img>
+      <header style={{padding: "15px"}} className="sticky top-0 left-0 right-0 mb-[45px] bg-white dark:bg-[#09090b] z-30">        
+        <div className="absolute w-[-webkit-fill-available] top-[15px] flex justify-center">
+          <img style={{height: "70px"}} src="src/logo.png"></img>
+        </div>
+
+        <div className="flex justify-between items-center">
+          <SidebarTrigger className="z-50 hover:opacity-60" />
+          <ThemeToggle />
+        </div>
       </header>
 
       {/* Barre de filtre d'historique */}
-      <HistoricFilter search={search} setSearch={setSearch}></HistoricFilter>
+      <HistoricFilter search={search} setSearch={setSearch}></HistoricFilter> 
 
       {/* Historique des Q/R */}
       <div
-        className="flex-1 overflow-y-auto mt-[115px] px-4 space-y-[22px] flex flex-col" ref={historyRef} id="history"
-        style={{gap: "10px", paddingBottom: inputHeight}}
+        className="flex-1 overflow-y-auto px-4 space-y-[22px] flex flex-col" ref={historyRef} id="history" onScroll={() => actionScroll()}
+        style={{gap: "10px", scrollbarColor: "#80808057 transparent", paddingBottom: inputHeight}}
       >
         {paginatedHistory.map((entry, index) => (
-          <HistoryCard key={index} question={highlightMatch(entry.question, search)} answer={highlightMatch(entry.answer, search)} tokens={entry.tokens} duration={entry.duration} />
+          <HistoryCard key={index} index={index} question={highlightMatch(entry.question, search)} answer={highlightMatch(entry.answer, search)} tokens={entry.tokens} duration={entry.duration} />
         ))}
 
         {pendingQuestion && (
@@ -289,98 +286,99 @@ function AskForm() {
       </div>
 
       {/* Input de question */}
-      <form
-        onSubmit={handleSubmit}
-        className="fixed bottom-0 left-0 right-0 text-black dark:text-white p-4 z-40"
-      >
-        <div
-          className="mx-auto flex items-center gap-2 bg-gray-100 dark:bg-[#27272a] border-[0.15rem] border-[#6b6b6b]"
-          style={{
-            maxWidth: "800px",
-            borderRadius: "30px",
-            padding: "0 15px",
-            scrollbarColor: "#80808057 transparent"
-          }}
+      <div className="sticky bottom-0 left-0 right-0 z-40">
+        <form
+          onSubmit={handleSubmit}
+          className="w-[60%] m-auto text-black dark:text-white p-4 shadow-[0px_4px_31px_29px_rgb(255,255,255)] dark:shadow-[0px_4px_31px_29px_rgb(9,9,11)]"
         >
-          <div className="flex gap-4 divAttachSend">
-            <InfoPanel/>
-            <ExportDialog history={history} author="Enzo Vandepoele" />
-          </div>
-          
-          <div style={{width: "-webkit-fill-available"}}>
-            <textarea
-              ref={textareaRef}
-              value={question}
-              onInput={handleInput}
-              onChange={(e) => {
-                setQuestion(e.target.value);
-                adjustTextareaHeight();
-              }}
-              onKeyDown={(e) => {
-                if (!loading && (e.ctrlKey || e.metaKey) && e.key === "Enter") {
-                  handleSubmit(e as unknown as React.FormEvent); // Cast car handleSubmit attend un FormEvent
-                }
-              }}
-              placeholder="Poser une question..."
-              className="flex-1 resize-none p-2 rounded border dark:bg-[#27272a] dark:text-white"
-              style={{
-                border: "none",
-                background: "none",
-                outline: "none",
-                maxHeight: `${MAX_HEIGHT_QUESTION_AREA}px`,
-                overflowY: "auto",
-                width: "inherit",
-              }}
-              rows={1}
+          <div
+            className="mx-auto flex items-center gap-2 bg-gray-100 dark:bg-[#27272a] border-[0.15rem] border-[#6b6b6b]"
+            ref={divQuestionRef}
+            style={{
+              maxWidth: "800px",
+              borderRadius: "30px",
+              padding: "0 15px",
+              scrollbarColor: "#80808057 transparent"
+            }}
+          >
+            <div className="flex gap-4 divAttachSend">
+              <InfoPanel/>
+              <ExportDialog history={history} author="Enzo Vandepoele" />
+            </div>
+            
+            <div style={{width: "-webkit-fill-available"}}>
+              <textarea
+                ref={textareaRef}
+                value={question}
+                onInput={handleInput}
+                onChange={(e) => {
+                  setQuestion(e.target.value);
+                  adjustTextareaHeight();
+                }}
+                onKeyDown={(e) => {
+                  if (!loading && (e.ctrlKey || e.metaKey) && e.key === "Enter") {
+                    handleSubmit(e as unknown as React.FormEvent); // Cast car handleSubmit attend un FormEvent
+                  }
+                }}
+                placeholder="Poser une question..."
+                className="flex-1 resize-none p-2 rounded border dark:bg-[#27272a] dark:text-white"
+                style={{
+                  border: "none",
+                  background: "none",
+                  outline: "none",
+                  maxHeight: `${MAX_HEIGHT_QUESTION_AREA}px`,
+                  overflowY: "auto",
+                  width: "inherit",
+                }}
+                rows={1}
+              />
+              <p
+                className="p-2"
+                style={{fontStyle: "italic", fontSize: "small", color: "darkgray"}}
+              >
+                {file && checked ? `Vous utiliser actuellement les données du fichier : ${file.name}` : "N'oubliez pas d'inclure votre fichier CSV et de l'attacher si besoin (bouton 'Données')"}
+              </p>
+            </div>
+            <input
+              type="file"
+              accept=".csv"
+              ref={fileInputRef}
+              className="hidden"
+              onChange={handleCsvImport}
             />
-            <p
-              className="p-2"
-              style={{fontStyle: "italic", fontSize: "small", color: "darkgray"}}
-            >
-              {file && checked ? `Vous utiliser actuellement les données du fichier : ${file.name}` : "N'oubliez pas d'inclure votre fichier CSV et de l'attacher si besoin (bouton 'Données')"}
-            </p>
-          </div>
-          <input
-            type="file"
-            accept=".csv"
-            ref={fileInputRef}
-            className="hidden"
-            onChange={handleCsvImport}
-          />
-          <div className="divAttachSend">
-            <DropdownMenuData file={file} setFile={setFile} checked={checked} setChecked={setChecked}></DropdownMenuData>
+            <div className="divAttachSend">
+              <DropdownMenuData file={file} setFile={setFile} checked={checked} setChecked={setChecked}></DropdownMenuData>
 
-            {loading ? (
-              <button
-                type="button"
-                onClick={handleStop}
-                title="Arrêter la requête"
-              >
-                <CircleStop size={24} className="hover:opacity-60" />
-              </button>
-            ) : (
-              <button
-                type="submit"
-                title="Envoyer la question"
-              >
-                <SendHorizonal size={24} className="hover:opacity-60" />
-              </button>
-            )}
+              {loading ? (
+                <button
+                  type="button"
+                  onClick={handleStop}
+                  title="Arrêter la requête"
+                >
+                  <CircleStop size={24} className="hover:opacity-60" />
+                </button>
+              ) : (
+                <button
+                  type="submit"
+                  title="Envoyer la question"
+                >
+                  <SendHorizonal size={24} className="hover:opacity-60" />
+                </button>
+              )}
+            </div>
           </div>
-        </div>
-      </form>
+        </form>
+      </div>
 
       {/* Bouton pour revenir en bas de l'histo */}
-      {!atBottom && (
-        <div
-          className="mx-auto sticky bottom-[115px] right-4 z-50 cursor-pointer bg-gray-200 dark:bg-gray-800 p-2 rounded-full shadow-lg animate-bounce"
-          style={{ display: isScrolledToBottom() ? 'none' : 'block', zIndex: 50 }}
-          onClick={scrollToBottom}
-          title="Aller en bas"
-        >
+      <div
+        className="mx-auto absolute bottom-[115px] w-[-webkit-fill-available] justify-center z-50"
+        style={{ display: atBottom ? 'none' : 'flex', bottom: arrowdownBottom }}
+      >
+        <button className="cursor-pointer bg-gray-200 dark:bg-gray-800 p-2 rounded-full shadow-lg animate-bounce" onClick={scrollToBottom} title="Aller en bas">
           <ArrowDown />
-        </div>
-      )}
+        </button>
+      </div>
       
       <ToastContainer stacked />
     </div>

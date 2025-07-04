@@ -82,6 +82,7 @@ export default function SoftwareError() {
                 <FormLabel>Fichier joint (facultatif)</FormLabel>
                 <FormControl>
                   <Input
+                    className="cursor-pointer"
                     type="file"
                     accept=".png,.jpg,.jpeg,.pdf,.log,.txt"
                     onChange={(e) => {

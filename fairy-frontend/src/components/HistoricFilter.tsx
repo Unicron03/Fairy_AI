@@ -8,16 +8,12 @@ type SearchingProps = {
 export function HistoricFilter({search, setSearch}: SearchingProps) {    
     return (
         // Barre de filtre d'historique
-        <div className="fixed top-[80px] left-0 right-0 z-40">
+        <div className="sticky left-0 right-0 z-40">
             <div
-                className="mx-auto"
-                style={{
-                    maxWidth: "500px",
-                    padding: "0 15px",
-                }}
+                className="mx-auto max-w-[75%] shadow-[0px_29px_31px_29px_rgb(255,255,255)] dark:shadow-[0px_29px_31px_29px_rgb(9,9,11)]"
             >
                 <div
-                    className="bg-white dark:bg-[#09090b]"
+                    className="bg-white dark:bg-[#09090b] mb-[35px] max-w-[40%] m-auto"
                     style={{
                         display: "flex",
                         borderRadius: "30%",
