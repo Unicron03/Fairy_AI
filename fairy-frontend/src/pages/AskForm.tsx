@@ -1,15 +1,15 @@
 import React, { useState, useEffect, useRef, JSX } from "react";
 import axios from "axios";
 import { SendHorizonal, CircleStop, ArrowDown } from "lucide-react";
-import ThemeToggle from "./ThemeToggle";
-import HistoryCard from "./HistoryCard";
+import ThemeToggle from "../components/ThemeToggle";
+import HistoryCard from "../components/HistoryCard";
 import { HashLoader } from "react-spinners";
 import { ToastContainer, toast } from 'react-toastify';
-import DropdownMenuData from "./DropdownMenuData";
-import { HistoricFilter } from "./HistoricFilter";
-import InfoPanel from "./InfoPanel";
-import ExportDialog from "./ExportDialog";
-import { SidebarTrigger, useSidebar } from "./ui/sidebar";
+import DropdownMenuData from "../components/DropdownMenuData";
+import { HistoricFilter } from "../components/HistoricFilter";
+import InfoPanel from "../components/InfoPanel";
+import ExportDialog from "../components/ExportDialog";
+import { SidebarTrigger, useSidebar } from "../components/ui/sidebar";
 
 function highlightMatch(text: string, search: string): string | (string | JSX.Element)[] {
   if (!search) return text;
@@ -379,8 +379,6 @@ function AskForm() {
           <ArrowDown />
         </button>
       </div>
-      
-      <ToastContainer stacked />
     </div>
   );
 }

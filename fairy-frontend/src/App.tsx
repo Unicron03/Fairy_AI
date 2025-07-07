@@ -1,4 +1,6 @@
-import AskForm from "./components/AskForm";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
+import Home from "./pages/home"
+import AskForm from "./pages/AskForm"
 import { SidebarProvider, useSidebar } from "@/components/ui/sidebar"
 import { AppSidebar } from "@/components/Sidebar"
 
@@ -32,18 +34,25 @@ function Layout() {
   const sidebarWidth = state === "collapsed" ? "0rem" : "15.5rem";
 
   return (
-    <div className="flex min-h-screen w-full">
-      {/* Sidebar avec largeur dynamique */}
-      <div className="flex z-50" style={{ width: sidebarWidth }}>
-        <AppSidebar />
-      </div>
+    <div className="flex h-full w-full">
+      <Router>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/ask" element={
+            <>
+              <div className="flex z-50" style={{ width: sidebarWidth }}>
+                <AppSidebar />
+              </div>
 
-      {/* Contenu principal */}
-      <div className="flex-1 flex flex-col">
-            <main>
-              <AskForm />
-            </main>
-      </div>
+              <div className="flex-1 flex flex-col">
+                <main>
+                  <AskForm />
+                </main>
+              </div>
+            </>
+          } />
+        </Routes>
+      </Router>
     </div>
   );
 }
