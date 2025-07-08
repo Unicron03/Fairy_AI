@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
-import Home from "./pages/home"
+import Home from "./pages/Home"
 import AskForm from "./pages/AskForm"
 import { SidebarProvider, useSidebar } from "@/components/ui/sidebar"
 import { AppSidebar } from "@/components/Sidebar"
