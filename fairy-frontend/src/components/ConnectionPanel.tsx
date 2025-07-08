@@ -18,15 +18,39 @@ export function ConnectionPanel() {
     const formRef = useRef<HTMLFormElement>(null)
     const [showPassword, setShowPassword] = useState(false)
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         const formData = new FormData(formRef.current!)
         const id = formData.get("id")
         const password = formData.get("password")
-        console.log("Identifiant :", id)
-        console.log("Mot de passe :", password)
 
-        
+        try {
+            const response = await fetch("http://localhost:3000/api/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ id, password }),
+            })
+
+            if (!response.ok) {
+                console.error("Échec de la connexion.")
+                return
+            }
+
+            const user = await response.json()
+
+            if (user.role === "admin") {
+                console.log("Connexion réussie en tant qu'admin")
+                console.log("Identifiant :", id)
+                console.log("Mot de passe :", password)
+            } else {
+                console.warn("Utilisateur connecté, mais n'est pas admin.")
+            }
+
+        } catch (error) {
+            console.error("Erreur lors de la connexion :", error)
+        }
     }
 
     return (
