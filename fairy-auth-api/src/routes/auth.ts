@@ -7,10 +7,12 @@ const prisma = new PrismaClient()
 
 // POST /login
 router.post("/login", async (req, res) => {
-  const { id, password } = req.body
+  const { name, password } = req.body
+
+  console.log("Tentative de connexion :", name)
 
   const user = await prisma.user.findUnique({
-    where: { identifier: id }
+    where: { name }
   })
 
   if (!user) {
@@ -24,29 +26,39 @@ router.post("/login", async (req, res) => {
     return
   }
 
-  // Ici : on n'utilise PAS `return res.json(...)`
+  console.log("Utilisateur : ", user, isValid)
+
   res.json({
-    id: user.identifier,
+    id: user.id,
+    name: user.name,
+    email: user.email,
     role: user.role
   })
 })
 
-// POST /register (optionnel)
+// POST /register
 router.post("/register", async (req, res) => {
-  const { id, password, role } = req.body
+  const { name, email, password, role } = req.body
   const hashed = await hashPassword(password)
 
   try {
     const user = await prisma.user.create({
       data: {
-        identifier: id,
+        name,
+        email,
         password: hashed,
         role: role === "ADMIN" ? "ADMIN" : "USER"
       }
     })
-    res.status(201).json({ id: user.identifier, role: user.role })
+
+    res.status(201).json({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role
+    })
   } catch (error) {
-    res.status(400).json({ error: "Erreur lors de l'inscription" })
+    res.status(400).json({ error: "Erreur lors de l'inscription", details: error })
   }
 })
 

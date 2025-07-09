@@ -12,16 +12,21 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Eye, EyeOff } from "lucide-react" // Icônes d’œil
+import { Eye, EyeOff } from "lucide-react"
+import { toast } from "react-toastify"
+import { useUser } from "@/context/UserContext"
+import { useNavigate } from "react-router-dom"
 
 export function ConnectionPanel() {
+    const navigate = useNavigate()
+    const { setUser } = useUser()
     const formRef = useRef<HTMLFormElement>(null)
     const [showPassword, setShowPassword] = useState(false)
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         const formData = new FormData(formRef.current!)
-        const id = formData.get("id")
+        const name = formData.get("name")
         const password = formData.get("password")
 
         try {
@@ -30,24 +35,27 @@ export function ConnectionPanel() {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ id, password }),
+                body: JSON.stringify({ name, password }),
             })
 
             if (!response.ok) {
-                console.error("Échec de la connexion.")
+                toast.error("Ces identifiants ne correspondent à aucuns utilisateur connu.", {
+                    progressClassName: "fancy-progress-bar", closeOnClick: true, autoClose: 10000, theme: localStorage.getItem("theme") || "light"
+                });
                 return
             }
 
             const user = await response.json()
 
-            if (user.role === "admin") {
-                console.log("Connexion réussie en tant qu'admin")
-                console.log("Identifiant :", id)
-                console.log("Mot de passe :", password)
+            if (user.role === "ADMIN") {
+                setUser(user)
+                toast.success("Connexion réussie en tant qu’admin !")
+                navigate("/ask")
             } else {
-                console.warn("Utilisateur connecté, mais n'est pas admin.")
+                setUser(user)
+                toast.success("Connexion réussie en tant utilisateur !")
+                navigate("/ask")
             }
-
         } catch (error) {
             console.error("Erreur lors de la connexion :", error)
         }
@@ -72,14 +80,14 @@ export function ConnectionPanel() {
 
                     <div className="grid gap-5 my-4">
                         <div className="grid gap-3">
-                            <Label htmlFor="id-1">Identifiant</Label>
-                            <Input id="id-1" name="id" />
+                            <Label htmlFor="name-input">Identifiant</Label>
+                            <Input id="name-input" name="name" />
                         </div>
 
                         <div className="grid gap-3 relative">
-                            <Label htmlFor="mdp-2">Mot de passe</Label>
+                            <Label htmlFor="password-input">Mot de passe</Label>
                             <Input
-                                id="mdp-2"
+                                id="password-input"
                                 name="password"
                                 type={showPassword ? "text" : "password"}
                                 className="pr-10"
@@ -109,7 +117,7 @@ export function ConnectionPanel() {
                             type="submit"
                             className="hover:opacity-60 bg-black dark:bg-white text-white dark:text-black"
                         >
-                        Se connecter
+                            Se connecter
                         </Button>
                     </DialogFooter>
                 </form>

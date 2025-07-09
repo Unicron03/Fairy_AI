@@ -10,6 +10,7 @@ import { HistoricFilter } from "../components/HistoricFilter";
 import InfoPanel from "../components/InfoPanel";
 import ExportDialog from "../components/ExportDialog";
 import { SidebarTrigger, useSidebar } from "../components/ui/sidebar";
+import { useUser } from "@/context/UserContext";
 
 function highlightMatch(text: string, search: string): string | (string | JSX.Element)[] {
   if (!search) return text;
@@ -25,6 +26,8 @@ function highlightMatch(text: string, search: string): string | (string | JSX.El
 }
 
 function AskForm() {
+  // const { user, logout } = useUser();
+  
   const fileInputRef = useRef<HTMLInputElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const divQuestionRef = useRef<HTMLDivElement>(null);

@@ -1,5 +1,4 @@
-import { SquarePen, Calendar, Home, Inbox, Search, Settings, User2, ChevronUp } from "lucide-react"
-
+import { SquarePen, Calendar, Inbox, Search, Settings, User2, ChevronUp } from "lucide-react"
 import {
   Sidebar,
   SidebarContent,
@@ -12,6 +11,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { useUser } from "@/context/UserContext"
 
 // Menu items.
 const items = [
@@ -38,6 +38,8 @@ const items = [
 ]
 
 export function AppSidebar() {
+  const { user, logout } = useUser();
+
   return (
     <Sidebar variant="floating" className="w-[var(--sidebar-width)] h-screen">
       <SidebarContent className="h-full overflow-y-auto rounded-lg" style={{scrollbarColor: "#80808057 transparent"}}>
@@ -77,7 +79,7 @@ export function AppSidebar() {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <SidebarMenuButton className="outline-none">
-                    <User2 /> Username
+                    <User2 /> {user?.name}
                     <ChevronUp className="ml-auto" />
                   </SidebarMenuButton>
                 </DropdownMenuTrigger>
@@ -85,14 +87,13 @@ export function AppSidebar() {
                   side="top"
                   className="w-[--radix-popper-anchor-width]"
                 >
-                  <DropdownMenuItem>
-                    <span>Account</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <span>Billing</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <span>Sign out</span>
+                  {user?.role === "ADMIN" && 
+                    <DropdownMenuItem>
+                      <span>Espace administrateur</span>
+                    </DropdownMenuItem>
+                  }
+                  <DropdownMenuItem onClick={logout}>
+                    <span>Se déconnecter</span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>

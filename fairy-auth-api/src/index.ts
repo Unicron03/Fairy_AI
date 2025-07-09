@@ -15,3 +15,7 @@ const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
   console.log(`✅ Auth API running on http://localhost:${PORT}`)
 })
+
+app.get("/", (req, res) => {
+  res.send("API Auth Fairy is running")
+})
