@@ -4,13 +4,12 @@ import { SendHorizonal, CircleStop, ArrowDown } from "lucide-react";
 import ThemeToggle from "../components/ThemeToggle";
 import HistoryCard from "../components/HistoryCard";
 import { HashLoader } from "react-spinners";
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import DropdownMenuData from "../components/DropdownMenuData";
 import { HistoricFilter } from "../components/HistoricFilter";
 import InfoPanel from "../components/InfoPanel";
 import ExportDialog from "../components/ExportDialog";
-import { SidebarTrigger, useSidebar } from "../components/ui/sidebar";
-import { useUser } from "@/context/UserContext";
+import { SidebarTrigger } from "../components/ui/sidebar";
 
 function highlightMatch(text: string, search: string): string | (string | JSX.Element)[] {
   if (!search) return text;

@@ -20,19 +20,14 @@ export default function Home() {
             <p className="p-2 italic text-sm text-gray-500 dark:text-gray-400">
                 Le logiciel IA spécialement conçu pour Evoléa
             </p>
+            
             <ConnectionPanel/>
-            {/* <Button className="hover:opacity-60 bg-black dark:bg-white text-white dark:text-black">
-                Se connecter
-            </Button> */}
-            {/* <Link to="/ask">Lien vers le formulaire</Link> */}
         </main>
 
         {/* Footer collé en bas */}
         <footer className="p-4 text-center text-sm italic text-gray-500 dark:text-gray-400">
             Fairy peut commettre des erreurs. Il est recommandé de vérifier les informations importantes.
         </footer>
-
-        <ToastContainer stacked />
     </div>
   )
 }

@@ -4,6 +4,9 @@ import AskForm from "./pages/AskForm"
 import { SidebarProvider, useSidebar } from "@/components/ui/sidebar"
 import { AppSidebar } from "@/components/Sidebar"
 import { UserProvider } from "@/context/UserContext" // import du provider
+import AdminPanel from "./pages/AdminPanel"
+import { ToastContainer } from "react-toastify"
+import { RequireAdmin, NotFoundRedirect } from "./components/RouteEffects"
 
 export type FileType = {
   value: string
@@ -25,20 +28,33 @@ function Layout() {
     <div className="flex h-full w-full">
       <Routes>
         <Route path="/" element={<Home />} />
+        
         <Route path="/ask" element={
           <>
             <div className="flex z-50" style={{ width: sidebarWidth }}>
               <AppSidebar />
             </div>
-
             <div className="flex-1 flex flex-col">
-              <main>
-                <AskForm />
-              </main>
+              <main><AskForm /></main>
             </div>
           </>
         } />
+
+        <Route path="/admin" element={
+          <RequireAdmin>
+            <div className="flex z-50" style={{ width: sidebarWidth }}>
+              <AppSidebar />
+            </div>
+            <div className="flex-1 flex flex-col">
+              <main><AdminPanel /></main>
+            </div>
+          </RequireAdmin>
+        } />
+
+        <Route path="*" element={<NotFoundRedirect />} />
       </Routes>
+
+      <ToastContainer stacked />
     </div>
   )
 }

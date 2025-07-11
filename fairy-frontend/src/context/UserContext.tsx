@@ -13,6 +13,7 @@ type UserContextType = {
     user: User | null
     setUser: (user: User | null) => void
     logout: () => void
+    isReady: boolean
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined)
@@ -20,6 +21,16 @@ const UserContext = createContext<UserContextType | undefined>(undefined)
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     const [user, setUserState] = useState<User | null>(null)
     const navigate = useNavigate()
+    const [isReady, setIsReady] = useState(false)
+
+    useEffect(() => {
+        const storedUser = localStorage.getItem("user")
+        if (storedUser) {
+            setUserState(JSON.parse(storedUser))
+        }
+        setIsReady(true) // <-- Indique que la vérification est terminée
+    }, [])
+
 
     useEffect(() => {
         const storedUser = localStorage.getItem("user")
@@ -30,20 +41,20 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
 
     const setUser = (newUser: User | null) => {
         if (newUser) {
-        localStorage.setItem("user", JSON.stringify(newUser))
+            localStorage.setItem("user", JSON.stringify(newUser))
         } else {
-        localStorage.removeItem("user")
+            localStorage.removeItem("user")
         }
         setUserState(newUser)
     }
 
     const logout = () => {
-        setUser(null)
         navigate("/")
+        setTimeout(() => setUser(null), 1) // Timeout pour éviter bug toast déco quand admin sur espace admin
     }
 
     return (
-        <UserContext.Provider value={{ user, setUser, logout }}>
+        <UserContext.Provider value={{ user, setUser, logout, isReady }}>
             {children}
         </UserContext.Provider>
     )

@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/sidebar"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { useUser } from "@/context/UserContext"
+import { useNavigate } from "react-router-dom";
 
 // Menu items.
 const items = [
@@ -39,6 +40,7 @@ const items = [
 
 export function AppSidebar() {
   const { user, logout } = useUser();
+  const navigate = useNavigate();
 
   return (
     <Sidebar variant="floating" className="w-[var(--sidebar-width)] h-screen">
@@ -88,7 +90,7 @@ export function AppSidebar() {
                   className="w-[--radix-popper-anchor-width]"
                 >
                   {user?.role === "ADMIN" && 
-                    <DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => navigate("/admin")}>
                       <span>Espace administrateur</span>
                     </DropdownMenuItem>
                   }

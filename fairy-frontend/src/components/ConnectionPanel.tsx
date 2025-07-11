@@ -49,11 +49,17 @@ export function ConnectionPanel() {
 
             if (user.role === "ADMIN") {
                 setUser(user)
-                toast.success("Connexion réussie en tant qu’admin !")
+                toast.success(
+                    <span>Connexion réussie. Bienvenue administrateur <strong>{user.name}</strong> 👋</span>, 
+                    { progressClassName: "fancy-progress-bar", closeOnClick: true, autoClose: 3000, theme: localStorage.getItem("theme") || "light" }
+                )
                 navigate("/ask")
             } else {
                 setUser(user)
-                toast.success("Connexion réussie en tant utilisateur !")
+                toast.success(
+                    <span>Connexion réussie. Bienvenue utilisateur <strong>{user.name}</strong> 👋</span>, 
+                    { progressClassName: "fancy-progress-bar", closeOnClick: true, autoClose: 3000, theme: localStorage.getItem("theme") || "light" }
+                )
                 navigate("/ask")
             }
         } catch (error) {
