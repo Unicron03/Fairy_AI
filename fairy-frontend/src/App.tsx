@@ -7,6 +7,7 @@ import { UserProvider } from "@/context/UserContext" // import du provider
 import AdminPanel from "./pages/AdminPanel"
 import { ToastContainer } from "react-toastify"
 import { RequireAdmin, NotFoundRedirect } from "./components/RouteEffects"
+import ConversationPage from "./pages/ConversationPage"
 
 export type FileType = {
   value: string
@@ -36,6 +37,17 @@ function Layout() {
             </div>
             <div className="flex-1 flex flex-col">
               <main><AskForm /></main>
+            </div>
+          </>
+        } />
+
+        <Route path="/conversation/:id" element={
+          <>
+            <div className="flex z-50" style={{ width: sidebarWidth }}>
+              <AppSidebar />
+            </div>
+            <div className="flex-1 flex flex-col">
+              <main><ConversationPage /></main>
             </div>
           </>
         } />

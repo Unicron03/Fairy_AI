@@ -1,6 +1,58 @@
+import { useState, useEffect } from "react";
 import ThemeToggle from "../components/ThemeToggle";
 import { SidebarTrigger } from "../components/ui/sidebar";
+import { ColumnDef } from "@tanstack/react-table"
+import { DataTable } from "@/components/ui/data-table";
 
+export type User = {
+  id: string
+  name: string
+  email: string
+  password: string
+}
+
+export const columns: ColumnDef<User>[] = [
+  {
+    accessorKey: "email",
+    header: "Email",
+  },
+  {
+    accessorKey: "name",
+    header: "Nom d'utilisateur",
+  },
+  {
+    accessorKey: "password",
+    header: "Mot de passe",
+    cell: ({ row }) => {
+      const value = row.getValue("password") as string
+      return <span className="text-xs text-gray-500">••••••••••</span> // sécurité basique
+    }
+  },
+  {
+    accessorKey: "nbConvAMsg",
+    header: "Nombre de conversations | messages totaux",
+  }
+]
+
+function AdminUserTable() {
+  const [data, setData] = useState<User[]>([])
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const res = await fetch("http://localhost:3001/api/users")
+        const users = await res.json()
+        setData(users)
+      } catch (error) {
+        console.error("Erreur de récupération des utilisateurs", error)
+      }
+    }
+
+    fetchUsers()
+  }, [])
+
+  return <DataTable columns={columns} data={data} />
+}
 
 export default function AdminPanel() {
     return (
@@ -16,6 +68,11 @@ export default function AdminPanel() {
                     <ThemeToggle />
                 </div>
             </header>
+
+            <div className="flex-1 px-8 py-4">
+                <h2 className="text-xl font-semibold mb-4">Utilisateurs</h2>
+                <AdminUserTable />
+            </div>
         </div>
     )
 }

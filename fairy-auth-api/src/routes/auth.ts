@@ -36,6 +36,23 @@ router.post("/login", async (req, res) => {
   })
 })
 
+// GET /users (Admin only)
+router.get("/users", async (req, res) => {
+  try {
+    const users = await prisma.user.findMany({
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        password: true, // risqué
+      },
+    })
+    res.json(users)
+  } catch (error) {
+    res.status(500).json({ error: "Erreur lors de la récupération des utilisateurs." })
+  }
+})
+
 // POST /register
 router.post("/register", async (req, res) => {
   const { name, email, password, role } = req.body
@@ -59,6 +76,72 @@ router.post("/register", async (req, res) => {
     })
   } catch (error) {
     res.status(400).json({ error: "Erreur lors de l'inscription", details: error })
+  }
+})
+
+// POST /api/conversations
+router.post("/conversations", async (req, res) => {
+  const { userId } = req.body
+
+  if (!userId) {
+    res.status(400).json({ error: "Missing userId" })
+    return
+  }
+
+  const conversation = await prisma.conversation.create({
+    data: {
+      userId,
+      question: "",  // Initialement vide
+      answer: "",
+      tokens: 0,
+      duration: 0
+    }
+  })
+
+  res.status(201).json(conversation)
+})
+
+// GET /api/conversations?userId=xxx
+router.get("/conversations", async (req, res) => {
+  const { userId } = req.query
+
+  if (!userId) {
+    res.status(400).json({ error: "Missing userId" })
+    return
+  }
+
+  const conversations = await prisma.conversation.findMany({
+    where: { userId: String(userId) },
+    orderBy: { createdAt: "desc" }
+  })
+
+  res.json(conversations)
+})
+
+router.get("/conversations/:id", async (req, res) => {
+  const { id } = req.params
+
+  try {
+    const conversation = await prisma.conversation.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        question: true,
+        answer: true,
+        tokens: true,
+        duration: true
+      }
+    })
+
+    if (!conversation) {
+      res.status(404).json({ error: "Conversation introuvable" })
+      return
+    }
+
+    res.json({ messages: [conversation] })
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({ error: "Erreur serveur" })
   }
 })
 

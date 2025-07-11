@@ -8,7 +8,6 @@ export type User = {
     email: string
     role: "ADMIN" | "USER"
 }
-
 type UserContextType = {
     user: User | null
     setUser: (user: User | null) => void

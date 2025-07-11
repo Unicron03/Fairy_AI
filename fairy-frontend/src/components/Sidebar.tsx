@@ -12,35 +12,34 @@ import {
 } from "@/components/ui/sidebar"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { useUser } from "@/context/UserContext"
+import { Conversation } from "@/context/ConversationContext"
 import { useNavigate } from "react-router-dom";
-
-// Menu items.
-const items = [
-  {
-    title: "Inbox",
-    url: "#",
-    icon: Inbox,
-  },
-  {
-    title: "Calendar",
-    url: "#",
-    icon: Calendar,
-  },
-  {
-    title: "Search",
-    url: "#",
-    icon: Search,
-  },
-  {
-    title: "Settings",
-    url: "#",
-    icon: Settings,
-  }
-]
+import { useEffect, useState } from "react";
 
 export function AppSidebar() {
   const { user, logout } = useUser();
+  const [conversations, setConversations] = useState<Conversation[]>([])
+  
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user) {
+      fetch(`http://localhost:3001/api/conversations?userId=${user.id}`)
+        .then(res => res.json())
+        .then(setConversations)
+    }
+  }, [user])
+
+  const handleNewConversation = async () => {
+    const res = await fetch("http://localhost:3001/api/conversations", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ userId: user?.id })
+    })
+
+    const newConv = await res.json()
+    setConversations(prev => [newConv, ...prev])
+  }
 
   return (
     <Sidebar variant="floating" className="w-[var(--sidebar-width)] h-screen">
@@ -48,24 +47,22 @@ export function AppSidebar() {
         <SidebarGroup>
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton asChild>
-                <a href="#">
-                  <SquarePen />
-                  <span>Nouvelle conversation</span>
-                </a>
+              <SidebarMenuButton onClick={handleNewConversation}>
+                <SquarePen />
+                <span>Nouvelle conversation</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
 
-          <SidebarGroupLabel style={{marginBlock: "10px"}}>Historique des conversations</SidebarGroupLabel>
+          <SidebarGroupLabel className="mt-4">Historique des conversations</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
+              {conversations.map((conv) => (
+                <SidebarMenuItem key={conv.id}>
                   <SidebarMenuButton asChild>
-                    <a href={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
+                    <a href={`/conversation/${conv.id}`}>
+                      <Inbox />
+                      <span>{conv.question || "Nouvelle conversation"}</span>
                     </a>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
