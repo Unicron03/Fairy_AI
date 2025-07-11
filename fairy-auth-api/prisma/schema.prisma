@@ -23,21 +23,20 @@ model User {
 }
 
 model Conversation {
-  id        String   @id @default(uuid())
+  id        String     @id @default(uuid())
   userId    String
-  user      User     @relation(fields: [userId], references: [id])
-  question  String
-  answer    String
-  tokens    Int
-  duration  Int
-  createdAt DateTime @default(now())
+  user      User       @relation(fields: [userId], references: [id])
+  messages  Message[]  // nouveau lien
+  createdAt DateTime   @default(now())
 }
 
 model Message {
-  id             String   @id @default(uuid())
-  conversationId String
-  conversation   Conversation @relation(fields: [conversationId], references: [id])
-  sender         String   // "user" ou "assistant"
-  content        String
-  createdAt      DateTime @default(now())
+  id              String        @id @default(uuid())
+  conversationId  String
+  conversation    Conversation  @relation(fields: [conversationId], references: [id])
+  sender          String
+  content         String
+  tokens          Int
+  duration        Int
+  createdAt       DateTime      @default(now())
 }

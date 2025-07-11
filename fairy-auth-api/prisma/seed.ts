@@ -3,7 +3,7 @@ import { hashPassword } from '../src/utils/hash'
 
 const prisma = new PrismaClient()
 
-async function createUser(name: string, email: string, psw: string, role: Role) {
+async function createUserWithConversations(name: string, email: string, psw: string, role: Role) {
   const hashed = await hashPassword(psw)
 
   const user = await prisma.user.upsert({
@@ -17,42 +17,47 @@ async function createUser(name: string, email: string, psw: string, role: Role) 
     },
   })
 
-  console.log(`✅ Utilisateur ${name} seedé avec succès.`)
-  return user
-}
+  console.log(`✅ Utilisateur ${name} seedé.`)
 
-async function createConversationWithMessages(userId: string, index: number) {
-  const conv = await prisma.conversation.create({
-    data: {
-      userId,
-      question: `Quelle est la question ${index + 1} ?`,
-      answer: `Ceci est la réponse automatique à la question ${index + 1}.`,
-      tokens: 42 + index * 3,
-      duration: 10 + index * 2,
-    },
-  })
+  // Crée 2 conversations avec des messages pour chaque utilisateur
+  for (let i = 1; i <= 2; i++) {
+    const conversation = await prisma.conversation.create({
+      data: {
+        userId: user.id,
+      },
+    })
 
-  console.log(`🗨️  Conversation ${index + 1} créée pour l'utilisateur ${userId}.`)
-  return conv
-}
+    await prisma.message.createMany({
+      data: [
+        {
+          conversationId: conversation.id,
+          sender: 'user',
+          content: `Question ${i} de ${name} ?`,
+          tokens: 15,
+          duration: 4,
+        },
+        {
+          conversationId: conversation.id,
+          sender: 'assistant',
+          content: `Réponse ${i} à ${name}.`,
+          tokens: 30,
+          duration: 6,
+        },
+      ],
+    })
 
-async function seedConversationsForUser(userId: string, count: number = 3) {
-  for (let i = 0; i < count; i++) {
-    await createConversationWithMessages(userId, i)
+    console.log(`  ↪️  Conversation ${i} + messages seedés pour ${name}`)
   }
 }
 
 async function main() {
-  const admin = await createUser("admin", "admin@example.com", "root", "ADMIN")
-  const user = await createUser("ev123456", "ev@example.com", "cats", "USER")
-
-  await seedConversationsForUser(admin.id, 2)
-  await seedConversationsForUser(user.id, 3)
+  await createUserWithConversations("admin", "admin@example.com", "root", "ADMIN")
+  await createUserWithConversations("ev123456", "ev@example.com", "cats", "USER")
 }
 
 main()
   .catch((e) => {
-    console.error(e)
+    console.error("❌ Erreur dans le seed :", e)
     process.exit(1)
   })
   .finally(async () => {
