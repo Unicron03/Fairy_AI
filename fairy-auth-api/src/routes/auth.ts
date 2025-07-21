@@ -81,25 +81,23 @@ router.post("/register", async (req, res) => {
 
 // POST /api/conversations
 router.post("/conversations", async (req, res) => {
-  const { userId } = req.body
+  const { userId } = req.body;
 
   if (!userId) {
-    res.status(400).json({ error: "Missing userId" })
-    return
+    return res.status(400).json({ error: "Missing userId" });
   }
 
-  const conversation = await prisma.conversation.create({
-    data: {
-      userId,
-      question: "",  // Initialement vide
-      answer: "",
-      tokens: 0,
-      duration: 0
-    }
-  })
+  try {
+    const conversation = await prisma.conversation.create({
+      data: { userId }
+    });
 
-  res.status(201).json(conversation)
-})
+    res.status(201).json(conversation);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Erreur lors de la création de la conversation" });
+  }
+});
 
 // GET /api/conversations?userId=xxx
 router.get("/conversations", async (req, res) => {
@@ -118,31 +116,30 @@ router.get("/conversations", async (req, res) => {
   res.json(conversations)
 })
 
+// GET /api/conversations/:id
 router.get("/conversations/:id", async (req, res) => {
-  const { id } = req.params
+  const { id } = req.params;
 
   try {
     const conversation = await prisma.conversation.findUnique({
       where: { id },
-      select: {
-        id: true,
-        question: true,
-        answer: true,
-        tokens: true,
-        duration: true
+      include: {
+        messages: {
+          orderBy: { createdAt: "asc" } // pour les afficher dans l’ordre
+        }
       }
-    })
+    });
 
     if (!conversation) {
-      res.status(404).json({ error: "Conversation introuvable" })
-      return
+      res.status(404).json({ error: "Conversation introuvable" });
+      return;
     }
 
-    res.json({ messages: [conversation] })
+    res.json({ messages: conversation.messages });
   } catch (error) {
-    console.error(error)
-    res.status(500).json({ error: "Erreur serveur" })
+    console.error(error);
+    res.status(500).json({ error: "Erreur serveur" });
   }
-})
+});
 
 export default router

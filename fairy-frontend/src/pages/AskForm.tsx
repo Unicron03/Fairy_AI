@@ -10,15 +10,6 @@ import { HistoricFilter } from "../components/HistoricFilter";
 import InfoPanel from "../components/InfoPanel";
 import ExportDialog from "../components/ExportDialog";
 import { SidebarTrigger } from "../components/ui/sidebar";
-import { useConversation } from "@/context/ConversationContext";
-
-type Message = {
-  id: string
-  question: string
-  answer: string
-  tokens: number
-  duration: number
-}
 
 function highlightMatch(text: string, search: string): string | (string | JSX.Element)[] {
   if (!search) return text;
@@ -39,7 +30,6 @@ function AskForm() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const divQuestionRef = useRef<HTMLDivElement>(null);
-  const { selectedConversationId } = useConversation();
   
   const MAX_HEIGHT_QUESTION_AREA = 300;
   const MARGIN_HISTORY_QUESTION_PANEL = 30;
@@ -61,23 +51,6 @@ function AskForm() {
   const [pendingQuestion, setPendingQuestion] = useState<string | null>(null);
   const [abortController, setAbortController] = useState<AbortController | null>(null);
   const [atBottom, setAtBottom] = useState(true);
-  const [messages, setMessages] = useState<Message[]>([])
-
-  useEffect(() => {
-    if (!selectedConversationId) return
-
-    const fetchMessages = async () => {
-      try {
-        const res = await fetch(`http://localhost:3001/api/conversations/${selectedConversationId}`)
-        const data = await res.json()
-        setMessages(data.messages)
-      } catch (err) {
-        console.error("Erreur lors du chargement des messages :", err)
-      }
-    }
-
-    fetchMessages()
-  }, [selectedConversationId])
 
   // Récupère l'historique du cache
   useEffect(() => {
@@ -303,16 +276,110 @@ function AskForm() {
         className="flex-1 overflow-y-auto px-4 space-y-[22px] flex flex-col" ref={historyRef} id="history" onScroll={() => actionScroll()}
         style={{gap: "10px", scrollbarColor: "#80808057 transparent", paddingBottom: inputHeight}}
       >
-        {messages.map((msg, index) => (
-          <HistoryCard
-            key={msg.id}
-            index={index}
-            question={msg.question}
-            answer={msg.answer}
-            tokens={msg.tokens}
-            duration={msg.duration}
-          />
+        {paginatedHistory.map((entry, index) => (
+          <HistoryCard key={index} index={index} question={highlightMatch(entry.question, search)} answer={highlightMatch(entry.answer, search)} tokens={entry.tokens} duration={entry.duration} />
         ))}
+
+        {pendingQuestion && (
+          <HistoryCard question={pendingQuestion} answer={<HashLoader size={20} color="#4f46e5" />} />
+        )}
+        
+        <div ref={bottomRef} style={{margin: "0"}}/>
+      </div>
+
+      {/* Input de question */}
+      <div className="sticky bottom-0 left-0 right-0 z-40">
+        <form
+          onSubmit={handleSubmit}
+          className="w-[60%] m-auto text-black dark:text-white p-4 shadow-[0px_4px_31px_29px_rgb(255,255,255)] dark:shadow-[0px_4px_31px_29px_rgb(9,9,11)]"
+        >
+          <div
+            className="mx-auto flex items-center gap-2 bg-gray-100 dark:bg-[#27272a] border-[0.15rem] border-[#6b6b6b]"
+            ref={divQuestionRef}
+            style={{
+              maxWidth: "800px",
+              borderRadius: "30px",
+              padding: "0 15px",
+              scrollbarColor: "#80808057 transparent"
+            }}
+          >
+            <div className="flex gap-4 divAttachSend">
+              <InfoPanel/>
+              <ExportDialog history={history} author="Enzo Vandepoele" />
+            </div>
+            
+            <div style={{width: "-webkit-fill-available"}}>
+              <textarea
+                ref={textareaRef}
+                value={question}
+                onInput={handleInput}
+                onChange={(e) => {
+                  setQuestion(e.target.value);
+                  adjustTextareaHeight();
+                }}
+                onKeyDown={(e) => {
+                  if (!loading && (e.ctrlKey || e.metaKey) && e.key === "Enter") {
+                    handleSubmit(e as unknown as React.FormEvent); // Cast car handleSubmit attend un FormEvent
+                  }
+                }}
+                placeholder="Poser une question..."
+                className="flex-1 resize-none p-2 rounded border dark:bg-[#27272a] dark:text-white"
+                style={{
+                  border: "none",
+                  background: "none",
+                  outline: "none",
+                  maxHeight: `${MAX_HEIGHT_QUESTION_AREA}px`,
+                  overflowY: "auto",
+                  width: "inherit",
+                }}
+                rows={1}
+              />
+              <p
+                className="p-2"
+                style={{fontStyle: "italic", fontSize: "small", color: "darkgray"}}
+              >
+                {file && checked ? `Vous utiliser actuellement les données du fichier : ${file.name}` : "N'oubliez pas d'inclure votre fichier CSV et de l'attacher si besoin (bouton 'Données')"}
+              </p>
+            </div>
+            <input
+              type="file"
+              accept=".csv"
+              ref={fileInputRef}
+              className="hidden"
+              onChange={handleCsvImport}
+            />
+            <div className="divAttachSend">
+              <DropdownMenuData file={file} setFile={setFile} checked={checked} setChecked={setChecked}></DropdownMenuData>
+
+              {loading ? (
+                <button
+                  type="button"
+                  onClick={handleStop}
+                  title="Arrêter la requête"
+                >
+                  <CircleStop size={24} className="hover:opacity-60" />
+                </button>
+              ) : (
+                <button
+                  type="submit"
+                  title="Envoyer la question"
+                >
+                  <SendHorizonal size={24} className="hover:opacity-60" />
+                </button>
+              )}
+            </div>
+          </div>
+        </form>
+      </div>
+
+      {/* Bouton pour revenir en bas de l'histo */}
+      <div
+        className="mx-auto absolute bottom-[115px] w-[-webkit-fill-available] justify-center z-50"
+        style={{ display: atBottom ? 'none' : 'flex', bottom: arrowdownBottom }}
+      >
+        <button className="cursor-pointer bg-gray-200 dark:bg-gray-800 p-2 rounded-full shadow-lg animate-bounce" onClick={scrollToBottom} title="Aller en bas">
+          <ArrowDown />
+        </button>
       </div>
     </div>
   );
