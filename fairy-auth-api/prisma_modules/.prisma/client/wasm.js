@@ -138,11 +138,10 @@ exports.Prisma.ConversationScalarFieldEnum = {
 exports.Prisma.MessageScalarFieldEnum = {
   id: 'id',
   conversationId: 'conversationId',
-  sender: 'sender',
-  content: 'content',
+  question: 'question',
+  answer: 'answer',
   tokens: 'tokens',
-  duration: 'duration',
-  createdAt: 'createdAt'
+  duration: 'duration'
 };
 
 exports.Prisma.SortOrder = {
@@ -165,8 +164,8 @@ exports.Prisma.ConversationOrderByRelevanceFieldEnum = {
 exports.Prisma.MessageOrderByRelevanceFieldEnum = {
   id: 'id',
   conversationId: 'conversationId',
-  sender: 'sender',
-  content: 'content'
+  question: 'question',
+  answer: 'answer'
 };
 exports.Role = exports.$Enums.Role = {
   USER: 'USER',

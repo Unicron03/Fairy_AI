@@ -3033,31 +3033,28 @@ export namespace Prisma {
   export type MessageMinAggregateOutputType = {
     id: string | null
     conversationId: string | null
-    sender: string | null
-    content: string | null
+    question: string | null
+    answer: string | null
     tokens: number | null
     duration: number | null
-    createdAt: Date | null
   }
 
   export type MessageMaxAggregateOutputType = {
     id: string | null
     conversationId: string | null
-    sender: string | null
-    content: string | null
+    question: string | null
+    answer: string | null
     tokens: number | null
     duration: number | null
-    createdAt: Date | null
   }
 
   export type MessageCountAggregateOutputType = {
     id: number
     conversationId: number
-    sender: number
-    content: number
+    question: number
+    answer: number
     tokens: number
     duration: number
-    createdAt: number
     _all: number
   }
 
@@ -3075,31 +3072,28 @@ export namespace Prisma {
   export type MessageMinAggregateInputType = {
     id?: true
     conversationId?: true
-    sender?: true
-    content?: true
+    question?: true
+    answer?: true
     tokens?: true
     duration?: true
-    createdAt?: true
   }
 
   export type MessageMaxAggregateInputType = {
     id?: true
     conversationId?: true
-    sender?: true
-    content?: true
+    question?: true
+    answer?: true
     tokens?: true
     duration?: true
-    createdAt?: true
   }
 
   export type MessageCountAggregateInputType = {
     id?: true
     conversationId?: true
-    sender?: true
-    content?: true
+    question?: true
+    answer?: true
     tokens?: true
     duration?: true
-    createdAt?: true
     _all?: true
   }
 
@@ -3192,11 +3186,10 @@ export namespace Prisma {
   export type MessageGroupByOutputType = {
     id: string
     conversationId: string
-    sender: string
-    content: string
+    question: string
+    answer: string
     tokens: number
     duration: number
-    createdAt: Date
     _count: MessageCountAggregateOutputType | null
     _avg: MessageAvgAggregateOutputType | null
     _sum: MessageSumAggregateOutputType | null
@@ -3221,11 +3214,10 @@ export namespace Prisma {
   export type MessageSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     conversationId?: boolean
-    sender?: boolean
-    content?: boolean
+    question?: boolean
+    answer?: boolean
     tokens?: boolean
     duration?: boolean
-    createdAt?: boolean
     conversation?: boolean | ConversationDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["message"]>
 
@@ -3234,14 +3226,13 @@ export namespace Prisma {
   export type MessageSelectScalar = {
     id?: boolean
     conversationId?: boolean
-    sender?: boolean
-    content?: boolean
+    question?: boolean
+    answer?: boolean
     tokens?: boolean
     duration?: boolean
-    createdAt?: boolean
   }
 
-  export type MessageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "conversationId" | "sender" | "content" | "tokens" | "duration" | "createdAt", ExtArgs["result"]["message"]>
+  export type MessageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "conversationId" | "question" | "answer" | "tokens" | "duration", ExtArgs["result"]["message"]>
   export type MessageInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     conversation?: boolean | ConversationDefaultArgs<ExtArgs>
   }
@@ -3254,11 +3245,10 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       conversationId: string
-      sender: string
-      content: string
+      question: string
+      answer: string
       tokens: number
       duration: number
-      createdAt: Date
     }, ExtArgs["result"]["message"]>
     composites: {}
   }
@@ -3631,11 +3621,10 @@ export namespace Prisma {
   interface MessageFieldRefs {
     readonly id: FieldRef<"Message", 'String'>
     readonly conversationId: FieldRef<"Message", 'String'>
-    readonly sender: FieldRef<"Message", 'String'>
-    readonly content: FieldRef<"Message", 'String'>
+    readonly question: FieldRef<"Message", 'String'>
+    readonly answer: FieldRef<"Message", 'String'>
     readonly tokens: FieldRef<"Message", 'Int'>
     readonly duration: FieldRef<"Message", 'Int'>
-    readonly createdAt: FieldRef<"Message", 'DateTime'>
   }
     
 
@@ -4035,11 +4024,10 @@ export namespace Prisma {
   export const MessageScalarFieldEnum: {
     id: 'id',
     conversationId: 'conversationId',
-    sender: 'sender',
-    content: 'content',
+    question: 'question',
+    answer: 'answer',
     tokens: 'tokens',
-    duration: 'duration',
-    createdAt: 'createdAt'
+    duration: 'duration'
   };
 
   export type MessageScalarFieldEnum = (typeof MessageScalarFieldEnum)[keyof typeof MessageScalarFieldEnum]
@@ -4074,8 +4062,8 @@ export namespace Prisma {
   export const MessageOrderByRelevanceFieldEnum: {
     id: 'id',
     conversationId: 'conversationId',
-    sender: 'sender',
-    content: 'content'
+    question: 'question',
+    answer: 'answer'
   };
 
   export type MessageOrderByRelevanceFieldEnum = (typeof MessageOrderByRelevanceFieldEnum)[keyof typeof MessageOrderByRelevanceFieldEnum]
@@ -4240,22 +4228,20 @@ export namespace Prisma {
     NOT?: MessageWhereInput | MessageWhereInput[]
     id?: StringFilter<"Message"> | string
     conversationId?: StringFilter<"Message"> | string
-    sender?: StringFilter<"Message"> | string
-    content?: StringFilter<"Message"> | string
+    question?: StringFilter<"Message"> | string
+    answer?: StringFilter<"Message"> | string
     tokens?: IntFilter<"Message"> | number
     duration?: IntFilter<"Message"> | number
-    createdAt?: DateTimeFilter<"Message"> | Date | string
     conversation?: XOR<ConversationScalarRelationFilter, ConversationWhereInput>
   }
 
   export type MessageOrderByWithRelationInput = {
     id?: SortOrder
     conversationId?: SortOrder
-    sender?: SortOrder
-    content?: SortOrder
+    question?: SortOrder
+    answer?: SortOrder
     tokens?: SortOrder
     duration?: SortOrder
-    createdAt?: SortOrder
     conversation?: ConversationOrderByWithRelationInput
     _relevance?: MessageOrderByRelevanceInput
   }
@@ -4266,22 +4252,20 @@ export namespace Prisma {
     OR?: MessageWhereInput[]
     NOT?: MessageWhereInput | MessageWhereInput[]
     conversationId?: StringFilter<"Message"> | string
-    sender?: StringFilter<"Message"> | string
-    content?: StringFilter<"Message"> | string
+    question?: StringFilter<"Message"> | string
+    answer?: StringFilter<"Message"> | string
     tokens?: IntFilter<"Message"> | number
     duration?: IntFilter<"Message"> | number
-    createdAt?: DateTimeFilter<"Message"> | Date | string
     conversation?: XOR<ConversationScalarRelationFilter, ConversationWhereInput>
   }, "id">
 
   export type MessageOrderByWithAggregationInput = {
     id?: SortOrder
     conversationId?: SortOrder
-    sender?: SortOrder
-    content?: SortOrder
+    question?: SortOrder
+    answer?: SortOrder
     tokens?: SortOrder
     duration?: SortOrder
-    createdAt?: SortOrder
     _count?: MessageCountOrderByAggregateInput
     _avg?: MessageAvgOrderByAggregateInput
     _max?: MessageMaxOrderByAggregateInput
@@ -4295,11 +4279,10 @@ export namespace Prisma {
     NOT?: MessageScalarWhereWithAggregatesInput | MessageScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Message"> | string
     conversationId?: StringWithAggregatesFilter<"Message"> | string
-    sender?: StringWithAggregatesFilter<"Message"> | string
-    content?: StringWithAggregatesFilter<"Message"> | string
+    question?: StringWithAggregatesFilter<"Message"> | string
+    answer?: StringWithAggregatesFilter<"Message"> | string
     tokens?: IntWithAggregatesFilter<"Message"> | number
     duration?: IntWithAggregatesFilter<"Message"> | number
-    createdAt?: DateTimeWithAggregatesFilter<"Message"> | Date | string
   }
 
   export type UserCreateInput = {
@@ -4416,71 +4399,64 @@ export namespace Prisma {
 
   export type MessageCreateInput = {
     id?: string
-    sender: string
-    content: string
+    question: string
+    answer: string
     tokens: number
     duration: number
-    createdAt?: Date | string
     conversation: ConversationCreateNestedOneWithoutMessagesInput
   }
 
   export type MessageUncheckedCreateInput = {
     id?: string
     conversationId: string
-    sender: string
-    content: string
+    question: string
+    answer: string
     tokens: number
     duration: number
-    createdAt?: Date | string
   }
 
   export type MessageUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    sender?: StringFieldUpdateOperationsInput | string
-    content?: StringFieldUpdateOperationsInput | string
+    question?: StringFieldUpdateOperationsInput | string
+    answer?: StringFieldUpdateOperationsInput | string
     tokens?: IntFieldUpdateOperationsInput | number
     duration?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     conversation?: ConversationUpdateOneRequiredWithoutMessagesNestedInput
   }
 
   export type MessageUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     conversationId?: StringFieldUpdateOperationsInput | string
-    sender?: StringFieldUpdateOperationsInput | string
-    content?: StringFieldUpdateOperationsInput | string
+    question?: StringFieldUpdateOperationsInput | string
+    answer?: StringFieldUpdateOperationsInput | string
     tokens?: IntFieldUpdateOperationsInput | number
     duration?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type MessageCreateManyInput = {
     id?: string
     conversationId: string
-    sender: string
-    content: string
+    question: string
+    answer: string
     tokens: number
     duration: number
-    createdAt?: Date | string
   }
 
   export type MessageUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    sender?: StringFieldUpdateOperationsInput | string
-    content?: StringFieldUpdateOperationsInput | string
+    question?: StringFieldUpdateOperationsInput | string
+    answer?: StringFieldUpdateOperationsInput | string
     tokens?: IntFieldUpdateOperationsInput | number
     duration?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type MessageUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     conversationId?: StringFieldUpdateOperationsInput | string
-    sender?: StringFieldUpdateOperationsInput | string
-    content?: StringFieldUpdateOperationsInput | string
+    question?: StringFieldUpdateOperationsInput | string
+    answer?: StringFieldUpdateOperationsInput | string
     tokens?: IntFieldUpdateOperationsInput | number
     duration?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type StringFilter<$PrismaModel = never> = {
@@ -4665,11 +4641,10 @@ export namespace Prisma {
   export type MessageCountOrderByAggregateInput = {
     id?: SortOrder
     conversationId?: SortOrder
-    sender?: SortOrder
-    content?: SortOrder
+    question?: SortOrder
+    answer?: SortOrder
     tokens?: SortOrder
     duration?: SortOrder
-    createdAt?: SortOrder
   }
 
   export type MessageAvgOrderByAggregateInput = {
@@ -4680,21 +4655,19 @@ export namespace Prisma {
   export type MessageMaxOrderByAggregateInput = {
     id?: SortOrder
     conversationId?: SortOrder
-    sender?: SortOrder
-    content?: SortOrder
+    question?: SortOrder
+    answer?: SortOrder
     tokens?: SortOrder
     duration?: SortOrder
-    createdAt?: SortOrder
   }
 
   export type MessageMinOrderByAggregateInput = {
     id?: SortOrder
     conversationId?: SortOrder
-    sender?: SortOrder
-    content?: SortOrder
+    question?: SortOrder
+    answer?: SortOrder
     tokens?: SortOrder
     duration?: SortOrder
-    createdAt?: SortOrder
   }
 
   export type MessageSumOrderByAggregateInput = {
@@ -5035,20 +5008,18 @@ export namespace Prisma {
 
   export type MessageCreateWithoutConversationInput = {
     id?: string
-    sender: string
-    content: string
+    question: string
+    answer: string
     tokens: number
     duration: number
-    createdAt?: Date | string
   }
 
   export type MessageUncheckedCreateWithoutConversationInput = {
     id?: string
-    sender: string
-    content: string
+    question: string
+    answer: string
     tokens: number
     duration: number
-    createdAt?: Date | string
   }
 
   export type MessageCreateOrConnectWithoutConversationInput = {
@@ -5112,11 +5083,10 @@ export namespace Prisma {
     NOT?: MessageScalarWhereInput | MessageScalarWhereInput[]
     id?: StringFilter<"Message"> | string
     conversationId?: StringFilter<"Message"> | string
-    sender?: StringFilter<"Message"> | string
-    content?: StringFilter<"Message"> | string
+    question?: StringFilter<"Message"> | string
+    answer?: StringFilter<"Message"> | string
     tokens?: IntFilter<"Message"> | number
     duration?: IntFilter<"Message"> | number
-    createdAt?: DateTimeFilter<"Message"> | Date | string
   }
 
   export type ConversationCreateWithoutMessagesInput = {
@@ -5183,38 +5153,34 @@ export namespace Prisma {
 
   export type MessageCreateManyConversationInput = {
     id?: string
-    sender: string
-    content: string
+    question: string
+    answer: string
     tokens: number
     duration: number
-    createdAt?: Date | string
   }
 
   export type MessageUpdateWithoutConversationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    sender?: StringFieldUpdateOperationsInput | string
-    content?: StringFieldUpdateOperationsInput | string
+    question?: StringFieldUpdateOperationsInput | string
+    answer?: StringFieldUpdateOperationsInput | string
     tokens?: IntFieldUpdateOperationsInput | number
     duration?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type MessageUncheckedUpdateWithoutConversationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    sender?: StringFieldUpdateOperationsInput | string
-    content?: StringFieldUpdateOperationsInput | string
+    question?: StringFieldUpdateOperationsInput | string
+    answer?: StringFieldUpdateOperationsInput | string
     tokens?: IntFieldUpdateOperationsInput | number
     duration?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type MessageUncheckedUpdateManyWithoutConversationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    sender?: StringFieldUpdateOperationsInput | string
-    content?: StringFieldUpdateOperationsInput | string
+    question?: StringFieldUpdateOperationsInput | string
+    answer?: StringFieldUpdateOperationsInput | string
     tokens?: IntFieldUpdateOperationsInput | number
     duration?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 

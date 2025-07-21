@@ -34,9 +34,8 @@ model Message {
   id             String       @id @default(uuid())
   conversationId String
   conversation   Conversation @relation(fields: [conversationId], references: [id])
-  sender         String
-  content        String
+  question       String
+  answer         String
   tokens         Int
   duration       Int
-  createdAt      DateTime     @default(now())
 }
