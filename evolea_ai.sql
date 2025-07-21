@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : lun. 21 juil. 2025 à 11:04
+-- Généré le : lun. 21 juil. 2025 à 15:36
 -- Version du serveur : 10.4.32-MariaDB
 -- Version de PHP : 8.2.12
 
@@ -20,7 +20,7 @@ SET time_zone = "+00:00";
 --
 -- Base de données : `evolea_ai`
 --
-CREATE DATABASE IF NOT EXISTS `evolea_ai` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+CREATE DATABASE IF NOT EXISTS `evolea_ai` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE `evolea_ai`;
 
 -- --------------------------------------------------------
@@ -40,11 +40,10 @@ CREATE TABLE `conversation` (
 --
 
 INSERT INTO `conversation` (`id`, `userId`, `createdAt`) VALUES
-('2525997b-170e-471e-b4be-f4f547b84a63', '36e59cdc-891b-4856-8d3b-f992da7e9bf1', '2025-07-21 09:01:00.758'),
-('2a6e1313-b5d1-4c98-bbed-a9ed77a3c329', 'e43fab31-43c6-4e31-a07d-746223442e63', '2025-07-21 09:00:47.355'),
-('a8315227-0787-4e65-8608-7dfcf3ed0022', '36e59cdc-891b-4856-8d3b-f992da7e9bf1', '2025-07-21 09:00:47.427'),
-('af27754c-6e6b-48c0-8f43-2ab406b64e34', 'e43fab31-43c6-4e31-a07d-746223442e63', '2025-07-21 09:00:47.346'),
-('e315b95d-c265-4780-bee3-e6ecfe412dcc', '36e59cdc-891b-4856-8d3b-f992da7e9bf1', '2025-07-21 09:00:47.419');
+('4b2a6e44-cf23-40ab-9f60-662af093b0d0', '1b8df9c6-f137-492c-8444-639409bf6780', '2025-07-21 13:33:49.476'),
+('635078a6-7a89-4318-9557-f20a37e2a3c5', '44105985-40de-475b-8a18-c26ea458787f', '2025-07-21 13:33:49.547'),
+('b7698233-18b1-4f78-92b9-9e731afe2e4f', '44105985-40de-475b-8a18-c26ea458787f', '2025-07-21 13:33:49.542'),
+('c31a145d-ec44-46b2-a2a1-7a1c84291065', '1b8df9c6-f137-492c-8444-639409bf6780', '2025-07-21 13:33:49.470');
 
 -- --------------------------------------------------------
 
@@ -55,26 +54,25 @@ INSERT INTO `conversation` (`id`, `userId`, `createdAt`) VALUES
 CREATE TABLE `message` (
   `id` varchar(191) NOT NULL,
   `conversationId` varchar(191) NOT NULL,
-  `sender` varchar(191) NOT NULL,
-  `content` varchar(191) NOT NULL,
+  `question` varchar(191) NOT NULL,
+  `answer` varchar(191) NOT NULL,
   `tokens` int(11) NOT NULL,
-  `duration` int(11) NOT NULL,
-  `createdAt` datetime(3) NOT NULL DEFAULT current_timestamp(3)
+  `duration` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `message`
 --
 
-INSERT INTO `message` (`id`, `conversationId`, `sender`, `content`, `tokens`, `duration`, `createdAt`) VALUES
-('20af19b0-b5c0-47a1-a25c-3e790410c5ef', 'a8315227-0787-4e65-8608-7dfcf3ed0022', 'assistant', 'Réponse 2 à ev123456.', 30, 6, '2025-07-21 09:00:47.430'),
-('51deac1e-9654-4f82-939c-7dedfb5d15b7', 'a8315227-0787-4e65-8608-7dfcf3ed0022', 'user', 'Question 2 de ev123456 ?', 15, 4, '2025-07-21 09:00:47.430'),
-('5eeadf05-17d9-42fe-b118-f506f5d6d13b', 'af27754c-6e6b-48c0-8f43-2ab406b64e34', 'assistant', 'Réponse 1 à admin.', 30, 6, '2025-07-21 09:00:47.353'),
-('63e50c00-c5ab-439f-8e0f-10aae992061f', 'e315b95d-c265-4780-bee3-e6ecfe412dcc', 'user', 'Question 1 de ev123456 ?', 15, 4, '2025-07-21 09:00:47.424'),
-('6ab525d4-1864-4c87-baf2-648b07f16acd', '2a6e1313-b5d1-4c98-bbed-a9ed77a3c329', 'assistant', 'Réponse 2 à admin.', 30, 6, '2025-07-21 09:00:47.359'),
-('83c4bd7f-028e-440b-af28-a677b03797c9', '2a6e1313-b5d1-4c98-bbed-a9ed77a3c329', 'user', 'Question 2 de admin ?', 15, 4, '2025-07-21 09:00:47.359'),
-('8862f3ae-e4c9-49e2-add7-3d8a2f8c9d95', 'af27754c-6e6b-48c0-8f43-2ab406b64e34', 'user', 'Question 1 de admin ?', 15, 4, '2025-07-21 09:00:47.353'),
-('b6b70633-4020-4946-93af-841a8c6b961d', 'e315b95d-c265-4780-bee3-e6ecfe412dcc', 'assistant', 'Réponse 1 à ev123456.', 30, 6, '2025-07-21 09:00:47.424');
+INSERT INTO `message` (`id`, `conversationId`, `question`, `answer`, `tokens`, `duration`) VALUES
+('35b11163-a33a-460f-b966-4aed26e41b2d', '635078a6-7a89-4318-9557-f20a37e2a3c5', 'Question 2 de ev123456 ?', 'Réponse 2 à ev123456.', 15, 4),
+('3d365b55-9842-472a-811a-669c254b1c00', 'b7698233-18b1-4f78-92b9-9e731afe2e4f', 'Question 1 de ev123456 ?', 'Réponse 1 à ev123456.', 15, 4),
+('3fcbf301-2966-4e53-93fd-6dc5b949f6ce', 'c31a145d-ec44-46b2-a2a1-7a1c84291065', 'Question 1 de admin ?', 'Réponse 1 à admin.', 15, 4),
+('57955d49-a6f5-4df7-bc97-2a4595f36aed', '635078a6-7a89-4318-9557-f20a37e2a3c5', 'Question 2 de ev123456 ?', 'Réponse 2 à ev123456.', 42, 17),
+('6da66872-45a4-4e22-a3d6-55a40164b2f9', 'b7698233-18b1-4f78-92b9-9e731afe2e4f', 'Question 1 de ev123456 ?', 'Réponse 1 à ev123456.', 42, 17),
+('c6aeb3e4-f509-47f8-9143-e67c0c20decb', '4b2a6e44-cf23-40ab-9f60-662af093b0d0', 'Question 2 de admin ?', 'Réponse 2 à admin.', 15, 4),
+('eb518882-230f-4b42-b8a0-449fccda453a', 'c31a145d-ec44-46b2-a2a1-7a1c84291065', 'Question 1 de admin ?', 'Réponse 1 à admin.', 42, 17),
+('f0d30e18-6db5-406e-af8a-001ff299c85d', '4b2a6e44-cf23-40ab-9f60-662af093b0d0', 'Question 2 de admin ?', 'Réponse 2 à admin.', 42, 17);
 
 -- --------------------------------------------------------
 
@@ -96,8 +94,8 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `name`, `email`, `password`, `role`, `createdAt`) VALUES
-('36e59cdc-891b-4856-8d3b-f992da7e9bf1', 'ev123456', 'ev@example.com', '$2b$10$VH.xkF9NbieZKUo/O/LwQ..m.vL2wHv75ARsz/yBclIZdupxAqFAa', 'USER', '2025-07-21 09:00:47.415'),
-('e43fab31-43c6-4e31-a07d-746223442e63', 'admin', 'admin@example.com', '$2b$10$4uEnRN04jKX76X8yZyiX9uXp89amoWjTFoHDVlWHpyy5vpKYt/kx2', 'ADMIN', '2025-07-21 09:00:47.336');
+('1b8df9c6-f137-492c-8444-639409bf6780', 'admin', 'admin@example.com', '$2b$10$SXhRXkXx391H3aTBwSvfHOtIEVTD2lnj8/w9EuWsLcQPs1Cl6Q/zC', 'ADMIN', '2025-07-21 13:33:49.462'),
+('44105985-40de-475b-8a18-c26ea458787f', 'ev123456', 'ev@example.com', '$2b$10$M6CFywtGSDtOxeer2eX9tOLG0IvFBEbXRetYHqH9R9svywPDnLiT2', 'USER', '2025-07-21 13:33:49.536');
 
 -- --------------------------------------------------------
 
@@ -121,7 +119,7 @@ CREATE TABLE `_prisma_migrations` (
 --
 
 INSERT INTO `_prisma_migrations` (`id`, `checksum`, `finished_at`, `migration_name`, `logs`, `rolled_back_at`, `started_at`, `applied_steps_count`) VALUES
-('471359f8-0481-4a3c-8bbe-6b7a74725de5', '2a88bc2d54cee9666cd0299073aa053eb5568ace0d73ffec25296789537edc1b', '2025-07-21 08:10:58.593', '20250721081058_init', NULL, NULL, '2025-07-21 08:10:58.462', 1);
+('8ad6b371-42fe-45c0-9b3a-c18065d86639', '4f00db4b11ecf0f7badf8919f29f47c3811e1e393ec49085ce61b5c041be3301', '2025-07-21 13:32:51.841', '20250721133251_init', NULL, NULL, '2025-07-21 13:32:51.738', 1);
 
 --
 -- Index pour les tables déchargées
