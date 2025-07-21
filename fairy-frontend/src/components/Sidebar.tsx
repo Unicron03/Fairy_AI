@@ -12,12 +12,13 @@ import {
 } from "@/components/ui/sidebar"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { useUser } from "@/context/UserContext"
-import { Conversation } from "@/context/ConversationContext"
-import { useNavigate } from "react-router-dom";
+import { Conversation, useConversation } from "@/context/ConversationContext"
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 export function AppSidebar() {
   const { user, logout } = useUser();
+  const { setSelectedConversationId } = useConversation();
   const [conversations, setConversations] = useState<Conversation[]>([])
   
   const navigate = useNavigate();
@@ -60,10 +61,10 @@ export function AppSidebar() {
               {conversations.map((conv) => (
                 <SidebarMenuItem key={conv.id}>
                   <SidebarMenuButton asChild>
-                    <a href={`/conversation/${conv.id}`}>
+                    <Link to={`/conversation/${conv.id}`} onClick={() => setSelectedConversationId(conv.id)}>
                       <Inbox />
-                      <span>{conv.question || "Nouvelle conversation"}</span>
-                    </a>
+                      <span>{conv.createdAt}</span>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}

@@ -31,17 +31,17 @@ async function createUserWithConversations(name: string, email: string, psw: str
       data: [
         {
           conversationId: conversation.id,
-          sender: 'user',
-          content: `Question ${i} de ${name} ?`,
+          question: `Question ${i} de ${name} ?`,
+          answer: `Réponse ${i} à ${name}.`,
           tokens: 15,
           duration: 4,
         },
         {
           conversationId: conversation.id,
-          sender: 'assistant',
-          content: `Réponse ${i} à ${name}.`,
-          tokens: 30,
-          duration: 6,
+          question: `Question ${i} de ${name} ?`,
+          answer: `Réponse ${i} à ${name}.`,
+          tokens: 42,
+          duration: 17,
         },
       ],
     })
@@ -64,4 +64,5 @@ main()
     await prisma.$disconnect()
   })
 
-// ➜ Exécution : npx ts-node prisma/seed.ts
+// Génération données tests : npx ts-node prisma/seed.ts
+// Si switch pc ne pas oublier d'upd prisma_modules

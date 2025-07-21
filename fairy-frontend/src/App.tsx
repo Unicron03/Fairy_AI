@@ -8,6 +8,7 @@ import AdminPanel from "./pages/AdminPanel"
 import { ToastContainer } from "react-toastify"
 import { RequireAdmin, NotFoundRedirect } from "./components/RouteEffects"
 import ConversationPage from "./pages/ConversationPage"
+import { ConversationProvider } from "./context/ConversationContext"
 
 export type FileType = {
   value: string
@@ -27,44 +28,46 @@ function Layout() {
 
   return (
     <div className="flex h-full w-full">
-      <Routes>
-        <Route path="/" element={<Home />} />
-        
-        <Route path="/ask" element={
-          <>
-            <div className="flex z-50" style={{ width: sidebarWidth }}>
-              <AppSidebar />
-            </div>
-            <div className="flex-1 flex flex-col">
-              <main><AskForm /></main>
-            </div>
-          </>
-        } />
+      <ConversationProvider>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          
+          <Route path="/ask" element={
+            <>
+              <div className="flex z-50" style={{ width: sidebarWidth }}>
+                <AppSidebar />
+              </div>
+              <div className="flex-1 flex flex-col">
+                <main><AskForm /></main>
+              </div>
+            </>
+          } />
 
-        <Route path="/conversation/:id" element={
-          <>
-            <div className="flex z-50" style={{ width: sidebarWidth }}>
-              <AppSidebar />
-            </div>
-            <div className="flex-1 flex flex-col">
-              <main><ConversationPage /></main>
-            </div>
-          </>
-        } />
+          <Route path="/conversation/:id" element={
+            <>
+              <div className="flex z-50" style={{ width: sidebarWidth }}>
+                <AppSidebar />
+              </div>
+              <div className="flex-1 flex flex-col">
+                <main><ConversationPage /></main>
+              </div>
+            </>
+          } />
 
-        <Route path="/admin" element={
-          <RequireAdmin>
-            <div className="flex z-50" style={{ width: sidebarWidth }}>
-              <AppSidebar />
-            </div>
-            <div className="flex-1 flex flex-col">
-              <main><AdminPanel /></main>
-            </div>
-          </RequireAdmin>
-        } />
+          <Route path="/admin" element={
+            <RequireAdmin>
+              <div className="flex z-50" style={{ width: sidebarWidth }}>
+                <AppSidebar />
+              </div>
+              <div className="flex-1 flex flex-col">
+                <main><AdminPanel /></main>
+              </div>
+            </RequireAdmin>
+          } />
 
-        <Route path="*" element={<NotFoundRedirect />} />
-      </Routes>
+          <Route path="*" element={<NotFoundRedirect />} />
+        </Routes>
+      </ConversationProvider>
 
       <ToastContainer stacked />
     </div>
