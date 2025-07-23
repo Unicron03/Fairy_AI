@@ -18,6 +18,7 @@ type ConversationContextType = {
     deleteConversation: (id: string) => Promise<void>
     saveConversation: (id: string, answer: string, tokens: number, duration: number, question: string) => Promise<void>
     renameConversation: (id: string, newTitle: string) => Promise<void>
+    fetchUserStats: (userId: string) => Promise<{ conversationsCount: number, messagesCount: number, tokensCount: number } | null>
 }
 
 const ConversationContext = createContext<ConversationContextType | undefined>(undefined)
@@ -79,7 +80,7 @@ export const ConversationProvider: React.FC<{ children: React.ReactNode }> = ({ 
             await fetch(`http://localhost:3001/api/conversations/${id}`, {
                 method: "DELETE",
             })
-            
+
             setConversations(prev => prev.filter(conv => conv.id !== id))
             if (selectedConversationId === id) {
                 setSelectedConversationId(null)
@@ -120,6 +121,22 @@ export const ConversationProvider: React.FC<{ children: React.ReactNode }> = ({ 
         }
     }
 
+    const fetchUserStats = async (userId: string) => {
+        try {
+            const res = await fetch(`http://localhost:3001/api/stats/${userId}`);
+
+            if (!res.ok) {
+                throw new Error("Erreur lors de la récupération des statistiques.");
+            }
+
+            const data = await res.json();
+            return data; // { conversationsCount, messagesCount, tokensCount }
+        } catch (err) {
+            console.error("Erreur fetchUserStats :", err);
+            return null;
+        }
+    };
+
     return (
         <ConversationContext.Provider value={{
             conversations,
@@ -130,6 +147,7 @@ export const ConversationProvider: React.FC<{ children: React.ReactNode }> = ({ 
             deleteConversation,
             saveConversation,
             renameConversation,
+            fetchUserStats,
         }}>
             {children}
         </ConversationContext.Provider>

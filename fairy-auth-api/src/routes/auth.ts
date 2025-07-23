@@ -222,4 +222,44 @@ router.post('/conversations/:id/messages', async (req, res) => {
 	}
 })
 
+// GET /api/stats/:userId
+router.get("/stats/:userId", async (req, res) => {
+	const { userId } = req.params;
+
+	if (!userId || typeof userId !== "string") {
+		return res.status(400).json({ error: "userId invalide." });
+	}
+
+	try {
+		// Compter les conversations de l'utilisateur
+		const conversationsCount = await prisma.conversation.count({
+			where: { userId },
+		});
+
+		// Récupérer tous les messages liés à ses conversations
+		const messages = await prisma.message.findMany({
+			where: {
+				conversation: {
+					userId,
+				},
+			},
+			select: {
+				tokens: true,
+			},
+		});
+
+		const messagesCount = messages.length;
+		const tokensCount = messages.reduce((acc, msg) => acc + (msg.tokens || 0), 0);
+
+		res.json({
+			conversationsCount,
+			messagesCount,
+			tokensCount,
+		});
+	} catch (error) {
+		console.error("Erreur lors du calcul des stats :", error);
+		res.status(500).json({ error: "Erreur serveur." });
+	}
+});
+
 export default router

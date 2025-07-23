@@ -1,4 +1,4 @@
-import { Search, Eraser } from "lucide-react";
+import { Eraser } from "lucide-react";
 
 type SearchingProps = {
     search: string;

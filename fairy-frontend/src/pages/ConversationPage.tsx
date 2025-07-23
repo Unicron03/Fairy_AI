@@ -281,7 +281,7 @@ export default function ConversationPage() {
                 className="flex-1 overflow-y-auto px-4 space-y-[22px] flex flex-col" ref={historyRef} id="history" onScroll={() => actionScroll()}
                 style={{gap: "10px", scrollbarColor: "#80808057 transparent", paddingBottom: inputHeight}}
             >
-                {paginatedHistory.map((entry, index) => (
+                {paginatedHistory.slice().reverse().map((entry, index) => (
                     <HistoryCard key={index} index={index} question={highlightMatch(entry.question, search)} answer={highlightMatch(entry.answer, search)} tokens={entry.tokens} duration={entry.duration} />
                 ))}
 
