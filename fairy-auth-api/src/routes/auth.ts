@@ -150,24 +150,26 @@ router.get("/conversations/:id", async (req, res) => {
 
 // POST /api/conversations/:id/rename
 router.post("/conversations/:id/rename", async (req, res) => {
-  const { id } = req.params;
-  const { newName } = req.body;
+	const { id } = req.params;
+	const { newName } = req.body;
 
-  if (!newName || typeof newName !== "string") {
-    return res.status(400).json({ error: "Le nouveau nom est requis et doit être une chaîne de caractères." });
-  }
+	console.log(id, newName)
 
-  try {
-    const updated = await prisma.conversation.update({
-      where: { id },
-      data: { convName: newName }
-    });
+	if (!newName || typeof newName !== "string") {
+		return res.status(400).json({ error: "Le nouveau nom est requis et doit être une chaîne de caractères." });
+	}
 
-    res.status(200).json(updated);
-  } catch (err) {
-    console.error("Erreur lors du renommage :", err);
-    res.status(500).json({ error: "Erreur serveur lors du renommage de la conversation." });
-  }
+	try {
+		const updated = await prisma.conversation.update({
+			where: { id },
+			data: { convName: newName }
+		});
+
+		res.status(200).json(updated);
+	} catch (err) {
+		console.error("Erreur lors du renommage :", err);
+		res.status(500).json({ error: "Erreur serveur lors du renommage de la conversation." });
+	}
 });
 
 // Suppression conversation

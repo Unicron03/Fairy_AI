@@ -52,6 +52,7 @@ export default function ConversationPage() {
     const [atBottom, setAtBottom] = useState(true)
     const [abortController, setAbortController] = useState<AbortController | null>(null)
     const historyRef = useRef<HTMLDivElement>(null)
+    const [runningConvId, setRunningConvId] = useState<string | null>(null)
     const [pendingQuestion, setPendingQuestion] = useState<string | null>(null)
     const bottomRef = useRef<HTMLDivElement | null>(null)
     const [inputHeight, setInputHeight] = useState(MARGIN_HISTORY_QUESTION_PANEL)
@@ -137,6 +138,7 @@ export default function ConversationPage() {
                 scrollToBottom();
             });
             setPendingQuestion(question);
+            setRunningConvId(selectedConversationId);
             setQuestion("");
         
             const reader = new FileReader();
@@ -153,7 +155,6 @@ export default function ConversationPage() {
             
                     setAnswer(res.data.answer);
                     if (selectedConversationId) saveConversation(selectedConversationId, res.data.answer, res.data.tokens_used, res.data.duration, question)
-                    // setMessages((prev) => [...prev, { question, answer: res.data.answer, tokens: res.data.tokens_used, duration: res.data.duration }]);
                     setPendingQuestion(null);
                 } catch (err) {
                     if (axios.isCancel(err)) {
@@ -166,30 +167,30 @@ export default function ConversationPage() {
             };
             reader.readAsText(file); // `file` est garanti non-null ici
         } else {
-        requestAnimationFrame(() => {
-            scrollToBottom();
-        });
-        setPendingQuestion(question);
-        setQuestion("");
-    
-        try {
-            const res = await axios.post("http://127.0.0.1:8000/ask", {
-                question,
-                csv_data: null,
-            }, { signal });
-    
-            setAnswer(res.data.answer);
-            if (selectedConversationId) saveConversation(selectedConversationId, res.data.answer, res.data.tokens_used, res.data.duration, question)
-            // setMessages((prev) => [...prev, { question, answer: res.data.answer, tokens: res.data.tokens_used, duration: res.data.duration }]);
-            setPendingQuestion(null);
-        } catch (err) {
-            if (axios.isCancel(err)) {
-            } else {
-                alert("Erreur lors de la communication avec l'API.");
+            requestAnimationFrame(() => {
+                scrollToBottom();
+            });
+            setPendingQuestion(question);
+            setRunningConvId(selectedConversationId);
+            setQuestion("");
+        
+            try {
+                const res = await axios.post("http://127.0.0.1:8000/ask", {
+                    question,
+                    csv_data: null,
+                }, { signal });
+        
+                setAnswer(res.data.answer);
+                if (selectedConversationId) saveConversation(selectedConversationId, res.data.answer, res.data.tokens_used, res.data.duration, question)
+                setPendingQuestion(null);
+            } catch (err) {
+                if (axios.isCancel(err)) {
+                } else {
+                    alert("Erreur lors de la communication avec l'API.");
+                }
+            } finally {
+                setLoading(false);
             }
-        } finally {
-            setLoading(false);
-        }
         }
     };
     
@@ -284,7 +285,7 @@ export default function ConversationPage() {
                     <HistoryCard key={index} index={index} question={highlightMatch(entry.question, search)} answer={highlightMatch(entry.answer, search)} tokens={entry.tokens} duration={entry.duration} />
                 ))}
 
-                {pendingQuestion && (
+                {runningConvId === selectedConversationId && pendingQuestion && (
                     <HistoryCard question={pendingQuestion} answer={<HashLoader size={20} color="#4f46e5" />} />
                 )}
                 

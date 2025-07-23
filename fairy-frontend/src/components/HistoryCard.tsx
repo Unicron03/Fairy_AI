@@ -66,7 +66,7 @@ const HistoryCard: React.FC<HistoryCardProps> = ({ index, question, answer, toke
                     onClick={() => copyText(flattenText(question), true)}
                     className="absolute -bottom-8 right-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
                     title="Copier la question"
-                    >
+                >
                     {copiedQuestion ? <Check /> : <Copy className="hover:opacity-60" />}
                 </button>
             </div>

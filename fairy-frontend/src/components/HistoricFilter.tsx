@@ -25,7 +25,7 @@ export function HistoricFilter({search, setSearch}: SearchingProps) {
                     </button> */}
                     <input
                         type="text"
-                        placeholder="Chercher une question..."
+                        placeholder="Chercher une question/réponse..."
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                         style={{ borderRadius: "8px 0 0 8px" }}

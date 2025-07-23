@@ -3,20 +3,21 @@ import { useUser } from "./UserContext"
 import { useNavigate } from "react-router-dom"
 
 export type Conversation = {
-  id: string
-  question: string
-  createdAt: string
+    id: string
+    userId: string
+    createdAt: string
+    convName: string
 }
 
 type ConversationContextType = {
-  conversations: Conversation[]
-  selectedConversationId: string | null
-  setConversations: React.Dispatch<React.SetStateAction<Conversation[]>>
-  setSelectedConversationId: (id: string | null) => void
-  createConversation: () => Promise<Conversation | null>
-  deleteConversation: (id: string) => Promise<void>
-  saveConversation: (id: string, answer: string, tokens: number, duration: number, question: string) => Promise<void>
-  renameConversation: (id: string, newTitle: string) => Promise<void>
+    conversations: Conversation[]
+    selectedConversationId: string | null
+    setConversations: React.Dispatch<React.SetStateAction<Conversation[]>>
+    setSelectedConversationId: (id: string | null) => void
+    createConversation: () => Promise<Conversation | null>
+    deleteConversation: (id: string) => Promise<void>
+    saveConversation: (id: string, answer: string, tokens: number, duration: number, question: string) => Promise<void>
+    renameConversation: (id: string, newTitle: string) => Promise<void>
 }
 
 const ConversationContext = createContext<ConversationContextType | undefined>(undefined)
@@ -40,44 +41,45 @@ export const ConversationProvider: React.FC<{ children: React.ReactNode }> = ({ 
         _setSelectedConversationId(id);
     };
 
-  useEffect(() => {
-    if (user) {
-      fetch(`http://localhost:3001/api/conversations?userId=${user.id}`)
-        .then(res => res.json())
-        .then(setConversations)
+    useEffect(() => {
+        if (user) {
+            fetch(`http://localhost:3001/api/conversations?userId=${user.id}`)
+                .then(res => res.json())
+                .then(setConversations)
+        }
+    }, [user])
+
+    const createConversation = async (): Promise<Conversation | null> => {
+        if (!user?.id) return null
+
+        try {
+            const res = await fetch("http://localhost:3001/api/conversations", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ userId: user.id })
+            })
+
+            if (!res.ok) throw new Error("Échec de la création de la conversation")
+
+            const newConv: Conversation = await res.json()
+
+            setConversations(prev => [newConv, ...prev])
+            setSelectedConversationId(newConv.id)
+            navigate(`/conversation/${newConv.id}`)
+
+            return newConv
+        } catch (err) {
+            console.error("Erreur lors de la création de la conversation :", err)
+            return null
+        }
     }
-  }, [user])
-
-  const createConversation = async (): Promise<Conversation | null> => {
-    if (!user?.id) return null
-
-    try {
-        const res = await fetch("http://localhost:3001/api/conversations", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ userId: user.id })
-        })
-
-        if (!res.ok) throw new Error("Échec de la création de la conversation")
-
-        const newConv: Conversation = await res.json()
-
-        setConversations(prev => [newConv, ...prev])
-        setSelectedConversationId(newConv.id)
-        navigate(`/conversation/${newConv.id}`)
-
-        return newConv
-    } catch (err) {
-      console.error("Erreur lors de la création de la conversation :", err)
-      return null
-    }
-  }
 
     const deleteConversation = async (id: string) => {
         try {
             await fetch(`http://localhost:3001/api/conversations/${id}`, {
                 method: "DELETE",
             })
+            
             setConversations(prev => prev.filter(conv => conv.id !== id))
             if (selectedConversationId === id) {
                 setSelectedConversationId(null)
@@ -105,31 +107,37 @@ export const ConversationProvider: React.FC<{ children: React.ReactNode }> = ({ 
             await fetch(`http://localhost:3001/api/conversations/${id}/rename`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ newName: { newTitle } }),
+                body: JSON.stringify({ newName: newTitle }),
             });
+
+            setConversations(prev =>
+                prev.map(conv =>
+                    conv.id === id ? { ...conv, convName: newTitle } : conv
+                )
+            );
         } catch (err) {
             console.error("Erreur lors du renommage de la conversation :", err)
         }
     }
 
-  return (
-    <ConversationContext.Provider value={{
-      conversations,
-      selectedConversationId,
-      setConversations,
-      setSelectedConversationId,
-      createConversation,
-      deleteConversation,
-      saveConversation,
-      renameConversation,
-    }}>
-      {children}
-    </ConversationContext.Provider>
-  )
+    return (
+        <ConversationContext.Provider value={{
+            conversations,
+            selectedConversationId,
+            setConversations,
+            setSelectedConversationId,
+            createConversation,
+            deleteConversation,
+            saveConversation,
+            renameConversation,
+        }}>
+            {children}
+        </ConversationContext.Provider>
+    )
 }
 
 export const useConversation = () => {
-  const context = useContext(ConversationContext)
-  if (!context) throw new Error("useConversation must be used within a ConversationProvider")
-  return context
+    const context = useContext(ConversationContext)
+    if (!context) throw new Error("useConversation must be used within a ConversationProvider")
+    return context
 }
