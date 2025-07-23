@@ -28,46 +28,44 @@ function Layout() {
 
   return (
     <div className="flex h-full w-full">
-      <ConversationProvider>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          
-          <Route path="/ask" element={
-            <>
-              <div className="flex z-50" style={{ width: sidebarWidth }}>
-                <AppSidebar />
-              </div>
-              <div className="flex-1 flex flex-col">
-                <main><AskForm /></main>
-              </div>
-            </>
-          } />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        
+        <Route path="/ask" element={
+          <>
+            <div className="flex z-50" style={{ width: sidebarWidth }}>
+              <AppSidebar />
+            </div>
+            <div className="flex-1 flex flex-col">
+              <main><AskForm /></main>
+            </div>
+          </>
+        } />
 
-          <Route path="/conversation/:id" element={
-            <>
-              <div className="flex z-50" style={{ width: sidebarWidth }}>
-                <AppSidebar />
-              </div>
-              <div className="flex-1 flex flex-col">
-                <main><ConversationPage /></main>
-              </div>
-            </>
-          } />
+        <Route path="/conversation/:id" element={
+          <>
+            <div className="flex z-50" style={{ width: sidebarWidth }}>
+              <AppSidebar />
+            </div>
+            <div className="flex-1 flex flex-col">
+              <main><ConversationPage /></main>
+            </div>
+          </>
+        } />
 
-          <Route path="/admin" element={
-            <RequireAdmin>
-              <div className="flex z-50" style={{ width: sidebarWidth }}>
-                <AppSidebar />
-              </div>
-              <div className="flex-1 flex flex-col">
-                <main><AdminPanel /></main>
-              </div>
-            </RequireAdmin>
-          } />
+        <Route path="/admin" element={
+          <RequireAdmin>
+            <div className="flex z-50" style={{ width: sidebarWidth }}>
+              <AppSidebar />
+            </div>
+            <div className="flex-1 flex flex-col">
+              <main><AdminPanel /></main>
+            </div>
+          </RequireAdmin>
+        } />
 
-          <Route path="*" element={<NotFoundRedirect />} />
-        </Routes>
-      </ConversationProvider>
+        <Route path="*" element={<NotFoundRedirect />} />
+      </Routes>
 
       <ToastContainer stacked />
     </div>
@@ -79,7 +77,9 @@ export default function App() {
     <SidebarProvider defaultOpen={localStorage.getItem("sidebar-state") === "open"}>
       <Router>
         <UserProvider>
-          <Layout />
+          <ConversationProvider>
+            <Layout />
+          </ConversationProvider>
         </UserProvider>
       </Router>
     </SidebarProvider>

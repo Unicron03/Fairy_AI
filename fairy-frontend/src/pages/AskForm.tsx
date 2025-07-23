@@ -1,258 +1,26 @@
-import React, { useState, useEffect, useRef, JSX } from "react";
-import axios from "axios";
-import { SendHorizonal, CircleStop, ArrowDown } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import ThemeToggle from "../components/ThemeToggle";
-import HistoryCard from "../components/HistoryCard";
-import { HashLoader } from "react-spinners";
-import { toast } from 'react-toastify';
-import DropdownMenuData from "../components/DropdownMenuData";
-import { HistoricFilter } from "../components/HistoricFilter";
-import InfoPanel from "../components/InfoPanel";
-import ExportDialog from "../components/ExportDialog";
 import { SidebarTrigger } from "../components/ui/sidebar";
-
-function highlightMatch(text: string, search: string): string | (string | JSX.Element)[] {
-  if (!search) return text;
-
-  const regex = new RegExp(`(${search})`, 'gi');
-  return text.split(regex).map((part, index) =>
-    part.toLowerCase() === search.toLowerCase() ? (
-      <strong key={index} className="font-bold">{part}</strong>
-    ) : (
-      part
-    )
-  );
-}
+import { useUser } from "@/context/UserContext";
+import { useEffect } from "react";
+import { useConversation } from "@/context/ConversationContext";
+import { useNavigate } from "react-router-dom"
 
 function AskForm() {
-  // const { user, logout } = useUser();
-  
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const divQuestionRef = useRef<HTMLDivElement>(null);
-  
-  const MAX_HEIGHT_QUESTION_AREA = 300;
-  const MARGIN_HISTORY_QUESTION_PANEL = 30;
+  const { user } = useUser()
+  const { conversations, setSelectedConversationId, createConversation } = useConversation()
+  const navigate = useNavigate()
 
-  const [file, setFile] = useState<File | null>(null);
-  const [checked, setChecked] = useState<boolean>(false);
-  const [csvTable, setCsvTable] = useState<string[][]>([]);
-  const [question, setQuestion] = useState<string>("");
-  const [answer, setAnswer] = useState<string>("");
-  const [history, setHistory] = useState<{ question: string, answer: string, tokens: number, duration: number }[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [hasLoadedHistory, setHasLoadedHistory] = useState<boolean>(false);
-  const [search, setSearch] = useState<string>("");
-  const [useCsv, setUseCsv] = useState<boolean>(false);
-  const [inputHeight, setInputHeight] = useState(MARGIN_HISTORY_QUESTION_PANEL);
-  const [arrowdownBottom, setArrowdownBottom] = useState(divQuestionRef.current?.offsetHeight);
-  const bottomRef = useRef<HTMLDivElement | null>(null);
-  const historyRef = useRef<HTMLDivElement>(null);
-  const [pendingQuestion, setPendingQuestion] = useState<string | null>(null);
-  const [abortController, setAbortController] = useState<AbortController | null>(null);
-  const [atBottom, setAtBottom] = useState(true);
-
-  // Récupère l'historique du cache
   useEffect(() => {
-    const savedHistory = localStorage.getItem("qa_history");
-    if (savedHistory) {
-      try {
-        const parsed = JSON.parse(savedHistory);
-        if (Array.isArray(parsed)) setHistory(parsed);
-      } catch (e) {
-        console.error("JSON parsing failed for qa_history", e);
-      }
-    }
-    setHasLoadedHistory(true);
-  }, []);
+    if (conversations.length > 0) {
+      const firstConversationId = conversations[0].id
 
-  // Sauvegarde l'historique dans le cache
-  useEffect(() => {
-    if (hasLoadedHistory) {
-      localStorage.setItem("qa_history", JSON.stringify(history));
-    }
-  }, [history, hasLoadedHistory]);
-
-  // On scroll en bas de la page à chaque rafraichissement
-  useEffect(() => {
-    // Attend la fin du rendu pour s'assurer que bottomRef est bien visible
-    const scroll = () => {
-      bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-    };
-  
-    // Scroll après un léger délai pour laisser React finir de rendre
-    const timeout = setTimeout(scroll, 50); // 50ms fonctionne bien dans la plupart des cas
-  
-    return () => clearTimeout(timeout);
-  }, [history]);
-
-  // Tranforme un CSV en tableau
-  const parseCsvToTable = (text: string): string[][] =>
-    text.trim().split("\n").map((line) =>
-      line
-        .split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/)
-        .map((cell) => cell.replace(/^"|"$/g, "").trim())
-    );
-
-  // Gère la soumission du formulaire
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-  
-    if (!question && abortController) {
-      setAbortController(null);
-      return;
-    } else if (!question) {
-      toast.warn('Merci de poser une question', {
-        progressClassName: "fancy-progress-bar", closeOnClick: true, autoClose: 3000, theme: localStorage.getItem("theme") || "light"
-      });
-      return;
-    }
-    const controller = new AbortController(); // Création d'un nouvel AbortController
-    setAbortController(controller); // Sauvegarder le contrôleur pour pouvoir l'utiliser plus tard
-    const signal = controller.signal;
-  
-    setLoading(true);
-  
-    if (useCsv) {
-      if (!file) {
-        toast("Vous avez activé l'utilisation du CSV, mais aucun fichier n'est attaché.", {
-          className: "bg-gray-100 dark:bg-[#27272a] text-black dark:text-white",
-          progressClassName: "fancy-progress-bar",
-        });
-        setLoading(false);
-        return;
-      }
-
-      requestAnimationFrame(() => {
-        scrollToBottom();
-      });
-      setPendingQuestion(question);
-      setQuestion("");
-
-      const reader = new FileReader();
-
-      reader.onload = async (event) => {
-        const text = event.target?.result as string;
-        setCsvTable(parseCsvToTable(text));
-
-        try {
-          const res = await axios.post("http://127.0.0.1:8000/ask", {
-            question,
-            csv_data: text,
-          }, { signal });
-
-          setAnswer(res.data.answer);
-          setHistory((prev) => [...prev, { question, answer: res.data.answer, tokens: res.data.tokens_used, duration: res.data.duration }]);
-          setPendingQuestion(null);
-        } catch (err) {
-          if (axios.isCancel(err)) {
-          } else {
-            alert("Erreur lors de la communication avec l'API.");
-          }
-        } finally {
-          setLoading(false);
-        }
-      };
-      reader.readAsText(file); // `file` est garanti non-null ici
+      setSelectedConversationId(firstConversationId)
+      navigate(`/conversation/${firstConversationId}`)
     } else {
-      requestAnimationFrame(() => {
-        scrollToBottom();
-      });
-      setPendingQuestion(question);
-      setQuestion("");
-
-      try {
-        const res = await axios.post("http://127.0.0.1:8000/ask", {
-          question,
-          csv_data: null,
-        }, { signal });
-
-        setAnswer(res.data.answer);
-        setHistory((prev) => [...prev, { question, answer: res.data.answer, tokens: res.data.tokens_used, duration: res.data.duration }]);
-        setPendingQuestion(null);
-      } catch (err) {
-        if (axios.isCancel(err)) {
-        } else {
-          alert("Erreur lors de la communication avec l'API.");
-        }
-      } finally {
-        setLoading(false);
-      }
+      console.log("AUCUNE CONVERSATION EXISTANTE")
     }
-  };
-
-  // Annule la soumission du formulaire
-  const handleStop = () => {
-    if (abortController) {
-      abortController.abort();
-      setLoading(false);
-      setPendingQuestion(null);
-    }
-  };
-
-  // Gère l'importation du fichier CSV
-  const handleCsvImport = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const uploadedFile = e.target.files?.[0] || null;
-    setFile(uploadedFile);
-    if (uploadedFile) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const text = event.target?.result as string;
-        setCsvTable(parseCsvToTable(text));
-      };
-      reader.readAsText(uploadedFile);
-    } else {
-      setCsvTable([]);
-      setUseCsv(false); // On désactive le levier d'utilisation du CSV si on enlève le CSV
-    }
-  };
-
-  // Filtre l'historique en fonction de la recherche
-  const paginatedHistory = history.filter((entry) =>
-    entry.question.toLowerCase().includes(search.toLowerCase()) || entry.answer.toLowerCase().includes(search.toLowerCase())
-  );
-
-  // Ajuste la hauteur de l'input de la question en fonction de son contenu
-  const adjustTextareaHeight = () => {
-    const textarea = textareaRef.current;
-    if (textarea) {
-      textarea.style.height = "auto";
-      textarea.style.height = Math.min(textarea.scrollHeight, MAX_HEIGHT_QUESTION_AREA) + "px"; // max 200px
-    }
-  };
-
-  // Callback dans la zone de saisie pour mettre à jour la hauteur
-  const handleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    e.target.style.height = 'auto';
-    e.target.style.height = e.target.scrollHeight + 'px';
-    // setInputHeight(Math.min(e.target.scrollHeight, MAX_HEIGHT_QUESTION_AREA) + (MARGIN_HISTORY_QUESTION_PANEL - 40));
-    setArrowdownBottom(Math.min(e.target.scrollHeight, MAX_HEIGHT_QUESTION_AREA) + (MARGIN_HISTORY_QUESTION_PANEL + 60));
-    
-    requestAnimationFrame(() => {
-      scrollToBottom();
-    });
-};
-
-  // Scroll vers le bas de la page
-  const scrollToBottom = () => {
-    // Attend la fin du rendu pour s'assurer que bottomRef est bien visible
-    const scroll = () => {
-      bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-    };
-  
-    // Scroll après un léger délai pour laisser React finir de rendre
-    const timeout = setTimeout(scroll, 50); // 50ms fonctionne bien dans la plupart des cas
-  
-    return () => clearTimeout(timeout);
-  };
-
-  const actionScroll = () => {
-    const el = historyRef.current;
-    if (!el) return;
-
-    const nearBottom = el.scrollTop + el.clientHeight + 200 >= el.scrollHeight;
-    setAtBottom(nearBottom);
-  }
+  }, [conversations])
 
   return (
     <div className="h-screen flex flex-col">
@@ -268,119 +36,18 @@ function AskForm() {
         </div>
       </header>
 
-      {/* Barre de filtre d'historique */}
-      <HistoricFilter search={search} setSearch={setSearch}></HistoricFilter> 
+      <main className="flex-1 flex flex-col items-center justify-center gap-5">
+          <p className="">
+            Bonjour {user?.name}, lancer votre première conversation !
+          </p>
 
-      {/* Historique des Q/R */}
-      <div
-        className="flex-1 overflow-y-auto px-4 space-y-[22px] flex flex-col" ref={historyRef} id="history" onScroll={() => actionScroll()}
-        style={{gap: "10px", scrollbarColor: "#80808057 transparent", paddingBottom: inputHeight}}
-      >
-        {paginatedHistory.map((entry, index) => (
-          <HistoryCard key={index} index={index} question={highlightMatch(entry.question, search)} answer={highlightMatch(entry.answer, search)} tokens={entry.tokens} duration={entry.duration} />
-        ))}
-
-        {pendingQuestion && (
-          <HistoryCard question={pendingQuestion} answer={<HashLoader size={20} color="#4f46e5" />} />
-        )}
-        
-        <div ref={bottomRef} style={{margin: "0"}}/>
-      </div>
-
-      {/* Input de question */}
-      <div className="sticky bottom-0 left-0 right-0 z-40">
-        <form
-          onSubmit={handleSubmit}
-          className="w-[60%] m-auto text-black dark:text-white p-4 shadow-[0px_4px_31px_29px_rgb(255,255,255)] dark:shadow-[0px_4px_31px_29px_rgb(9,9,11)]"
-        >
-          <div
-            className="mx-auto flex items-center gap-2 bg-gray-100 dark:bg-[#27272a] border-[0.15rem] border-[#6b6b6b]"
-            ref={divQuestionRef}
-            style={{
-              maxWidth: "800px",
-              borderRadius: "30px",
-              padding: "0 15px",
-              scrollbarColor: "#80808057 transparent"
-            }}
+          <Button
+            onClick={createConversation}
+            className="hover:opacity-60 bg-black dark:bg-white text-white dark:text-black"
           >
-            <div className="flex gap-4 divAttachSend">
-              <InfoPanel/>
-              <ExportDialog history={history} author="Enzo Vandepoele" />
-            </div>
-            
-            <div style={{width: "-webkit-fill-available"}}>
-              <textarea
-                ref={textareaRef}
-                value={question}
-                onInput={handleInput}
-                onChange={(e) => {
-                  setQuestion(e.target.value);
-                  adjustTextareaHeight();
-                }}
-                onKeyDown={(e) => {
-                  if (!loading && (e.ctrlKey || e.metaKey) && e.key === "Enter") {
-                    handleSubmit(e as unknown as React.FormEvent); // Cast car handleSubmit attend un FormEvent
-                  }
-                }}
-                placeholder="Poser une question..."
-                className="flex-1 resize-none p-2 rounded border dark:bg-[#27272a] dark:text-white"
-                style={{
-                  border: "none",
-                  background: "none",
-                  outline: "none",
-                  maxHeight: `${MAX_HEIGHT_QUESTION_AREA}px`,
-                  overflowY: "auto",
-                  width: "inherit",
-                }}
-                rows={1}
-              />
-              <p
-                className="p-2"
-                style={{fontStyle: "italic", fontSize: "small", color: "darkgray"}}
-              >
-                {file && checked ? `Vous utiliser actuellement les données du fichier : ${file.name}` : "N'oubliez pas d'inclure votre fichier CSV et de l'attacher si besoin (bouton 'Données')"}
-              </p>
-            </div>
-            <input
-              type="file"
-              accept=".csv"
-              ref={fileInputRef}
-              className="hidden"
-              onChange={handleCsvImport}
-            />
-            <div className="divAttachSend">
-              <DropdownMenuData file={file} setFile={setFile} checked={checked} setChecked={setChecked}></DropdownMenuData>
-
-              {loading ? (
-                <button
-                  type="button"
-                  onClick={handleStop}
-                  title="Arrêter la requête"
-                >
-                  <CircleStop size={24} className="hover:opacity-60" />
-                </button>
-              ) : (
-                <button
-                  type="submit"
-                  title="Envoyer la question"
-                >
-                  <SendHorizonal size={24} className="hover:opacity-60" />
-                </button>
-              )}
-            </div>
-          </div>
-        </form>
-      </div>
-
-      {/* Bouton pour revenir en bas de l'histo */}
-      <div
-        className="mx-auto absolute bottom-[115px] w-[-webkit-fill-available] justify-center z-50"
-        style={{ display: atBottom ? 'none' : 'flex', bottom: arrowdownBottom }}
-      >
-        <button className="cursor-pointer bg-gray-200 dark:bg-gray-800 p-2 rounded-full shadow-lg animate-bounce" onClick={scrollToBottom} title="Aller en bas">
-          <ArrowDown />
-        </button>
-      </div>
+            Nouvelle conversation
+          </Button>
+      </main>
     </div>
   );
 }

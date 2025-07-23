@@ -4,28 +4,28 @@ import { useLocation, Navigate } from "react-router-dom"
 import { toast } from "react-toastify"
 
 export function RequireAdmin({ children }: { children: React.ReactNode }) {
-  const { user, isReady } = useUser()
-  const location = useLocation()
+    const { user, isReady } = useUser()
+    const location = useLocation()
 
- useEffect(() => {
-  if (isReady && (!user || user.role !== "ADMIN")) {
-    toast.error("Accès refusé : réservé aux administrateurs.", {
-      progressClassName: "fancy-progress-bar",
-      closeOnClick: true,
-      autoClose: 5000,
-      theme: localStorage.getItem("theme") || "light"
-    })
-  }
-}, [user, isReady, location.pathname])
+    useEffect(() => {
+    if (isReady && (!user || user.role !== "ADMIN")) {
+        toast.error("Accès refusé : réservé aux administrateurs.", {
+            progressClassName: "fancy-progress-bar",
+            closeOnClick: true,
+            autoClose: 5000,
+            theme: localStorage.getItem("theme") || "light"
+        })
+    }
+    }, [user, isReady, location.pathname])
 
 
-  if (!isReady) return null // ou un spinner
+    if (!isReady) return null // ou un spinner
 
-  if (!user || user.role !== "ADMIN") {
-    return <Navigate to="/" replace state={{ from: location }} />
-  }
+    if (!user || user.role !== "ADMIN") {
+        return <Navigate to="/" replace state={{ from: location }} />
+    }
 
-  return <>{children}</>
+    return <>{children}</>
 }
 
 export function NotFoundRedirect() {

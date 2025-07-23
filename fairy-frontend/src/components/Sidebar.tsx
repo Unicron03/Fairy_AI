@@ -1,4 +1,4 @@
-import { SquarePen, Calendar, Inbox, Search, Settings, User2, ChevronUp } from "lucide-react"
+import { SquarePen, Inbox, User2, ChevronUp, MoreHorizontal } from "lucide-react"
 import {
   Sidebar,
   SidebarContent,
@@ -7,20 +7,34 @@ import {
   SidebarGroupContent,
   SidebarGroupLabel,
   SidebarMenu,
+  SidebarMenuAction,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { useUser } from "@/context/UserContext"
-import { Conversation, useConversation } from "@/context/ConversationContext"
+import { useConversation } from "@/context/ConversationContext"
 import { Link, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+
+function GetDateFormatted(isoDate: string) {
+  const date = new Date(isoDate)
+
+  const hours = date.getHours().toString().padStart(2, '0')
+  const minutes = date.getMinutes().toString().padStart(2, '0')
+  const day = date.getDate().toString().padStart(2, '0')
+  const month = (date.getMonth() + 1).toString().padStart(2, '0')
+  const year = date.getFullYear()
+
+  const formatted = `${hours}h${minutes} ${day}/${month}/${year}`
+
+  return formatted
+}
 
 export function AppSidebar() {
-  const { user, logout } = useUser();
-  const { setSelectedConversationId } = useConversation();
-  const [conversations, setConversations] = useState<Conversation[]>([])
-  
+  const { user, logout } = useUser()
+  const { conversations, setConversations, setSelectedConversationId, createConversation, deleteConversation, renameConversation } = useConversation()
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -31,31 +45,20 @@ export function AppSidebar() {
     }
   }, [user])
 
-  const handleNewConversation = async () => {
-    const res = await fetch("http://localhost:3001/api/conversations", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userId: user?.id })
-    })
-
-    const newConv = await res.json()
-    setConversations(prev => [newConv, ...prev])
-  }
-
   return (
     <Sidebar variant="floating" className="w-[var(--sidebar-width)] h-screen">
       <SidebarContent className="h-full overflow-y-auto rounded-lg" style={{scrollbarColor: "#80808057 transparent"}}>
         <SidebarGroup>
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton onClick={handleNewConversation}>
+              <SidebarMenuButton onClick={() => createConversation()}>
                 <SquarePen />
                 <span>Nouvelle conversation</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
 
-          <SidebarGroupLabel className="mt-4">Historique des conversations</SidebarGroupLabel>
+          <SidebarGroupLabel style={{marginBlock: "1rem"}}>Historique des conversations</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {conversations.map((conv) => (
@@ -63,9 +66,24 @@ export function AppSidebar() {
                   <SidebarMenuButton asChild>
                     <Link to={`/conversation/${conv.id}`} onClick={() => setSelectedConversationId(conv.id)}>
                       <Inbox />
-                      <span>{conv.createdAt}</span>
+                      <span>{GetDateFormatted(conv.createdAt)}</span>
                     </Link>
                   </SidebarMenuButton>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <SidebarMenuAction>
+                        <MoreHorizontal />
+                      </SidebarMenuAction>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent side="right" align="start">
+                      <DropdownMenuItem onClick={() => renameConversation(conv.id, "test rename")} >
+                        <span>Renommer</span>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => deleteConversation(conv.id)}>
+                        <span>Supprimer</span>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>

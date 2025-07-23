@@ -1,8 +1,5 @@
 import InfoPanel from "@/components/InfoPanel"
 import ThemeToggle from "@/components/ThemeToggle"
-import { Button } from "@/components/ui/button"
-import { Link } from "react-router-dom"
-import { ToastContainer } from "react-toastify"
 import { ConnectionPanel } from "@/components/ConnectionPanel"
 
 export default function Home() {
