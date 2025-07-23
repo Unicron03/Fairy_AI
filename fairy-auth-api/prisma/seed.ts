@@ -65,7 +65,7 @@ main()
     })
 
 // Génération : npx prisma generate
-// Reset & Migration : npx prisma reset & npx prisma migrate dev
+// Reset & Migration : npx prisma migrate reset & npx prisma migrate dev
 // Génération données tests : npx ts-node prisma/seed.ts
 // Si switch pc ne pas oublier d'upd prisma_modules
 // Exporter la BDD

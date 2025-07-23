@@ -132,6 +132,7 @@ exports.Prisma.UserScalarFieldEnum = {
 exports.Prisma.ConversationScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
+  convName: 'convName',
   createdAt: 'createdAt'
 };
 
@@ -156,9 +157,15 @@ exports.Prisma.UserOrderByRelevanceFieldEnum = {
   password: 'password'
 };
 
+exports.Prisma.NullsOrder = {
+  first: 'first',
+  last: 'last'
+};
+
 exports.Prisma.ConversationOrderByRelevanceFieldEnum = {
   id: 'id',
-  userId: 'userId'
+  userId: 'userId',
+  convName: 'convName'
 };
 
 exports.Prisma.MessageOrderByRelevanceFieldEnum = {

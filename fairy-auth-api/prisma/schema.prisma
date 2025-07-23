@@ -27,7 +27,7 @@ model Conversation {
   userId    String
   user      User       @relation(fields: [userId], references: [id])
   messages  Message[]  // nouveau lien
-  convName  String
+  convName  String?
   createdAt DateTime   @default(now())
 }
 
