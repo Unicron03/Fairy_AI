@@ -1,20 +1,21 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import ThemeToggle from "../components/ThemeToggle";
 import { SidebarTrigger } from "../components/ui/sidebar";
 import { ColumnDef } from "@tanstack/react-table"
 import { DataTable } from "@/components/ui/data-table";
+import { UserCreationPanel } from "@/components/user/UserCreationPanel";
+import { useUser, AdminUser } from "@/context/UserContext";
+import { UserDeletionDialog } from "@/components/user/UserDeletionDialog";
 
-export type User = {
-    id: string
-    name: string
-    email: string
-    password: string
-    conversationsCount?: number
-    messagesCount?: number
-    tokensCount?: number
-}
-
-export const columns: ColumnDef<User>[] = [
+export const columns: ColumnDef<AdminUser>[] = [
+    {
+        id: "actions",
+        header: "Actions",
+        cell: ({ row }) => {
+            const user = row.original
+            return <UserDeletionDialog userToDelete={user} />
+        },
+    },
     {
         accessorKey: "email",
         header: "Email",
@@ -22,14 +23,6 @@ export const columns: ColumnDef<User>[] = [
     {
         accessorKey: "name",
         header: "Nom d'utilisateur",
-    },
-    {
-        accessorKey: "password",
-        header: "Mot de passe",
-        cell: ({ row }) => {
-            const value = row.getValue("password") as string
-            return <span className="text-xs text-gray-500">••••••••••</span> // sécurité basique
-        }
     },
     {
         accessorKey: "nbConvAMsg",
@@ -49,43 +42,16 @@ export const columns: ColumnDef<User>[] = [
 ]
 
 function AdminUserTable() {
-    const [data, setData] = useState<User[]>([])
-
-    const fetchUserStats = async (userId: string) => {
-        try {
-            const res = await fetch(`http://localhost:3001/api/stats/${userId}`)
-            if (!res.ok) throw new Error("Stats non trouvées")
-            return await res.json()
-        } catch (err) {
-            console.error(`Erreur stats pour user ${userId}`, err)
-            return { conversationsCount: 0, messagesCount: 0, tokensCount: 0 }
-        }
-    }
+    const { adminUsers, fetchAllUsers } = useUser()
 
     useEffect(() => {
-        const fetchUsersWithStats = async () => {
-            try {
-                const res = await fetch("http://localhost:3001/api/users")
-                const users: User[] = await res.json()
-
-                // Attendre toutes les stats en parallèle
-                const usersWithStats = await Promise.all(
-                    users.map(async user => {
-                        const stats = await fetchUserStats(user.id)
-                        return { ...user, ...stats }
-                    })
-                )
-
-                setData(usersWithStats)
-            } catch (error) {
-                console.error("Erreur de récupération des utilisateurs", error)
-            }
-        }
-
-        fetchUsersWithStats()
+        // Le `fetchAllUsers` est appelé ici pour charger les données initiales.
+        // Il sera aussi appelé depuis `createUser` pour rafraîchir.
+        fetchAllUsers()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    return <DataTable columns={columns} data={data} />
+    return <DataTable columns={columns} data={adminUsers} />
 }
 
 export default function AdminPanel() {
@@ -103,8 +69,9 @@ export default function AdminPanel() {
                 </div>
             </header>
 
-            <div className="flex-1 px-8 py-4">
+            <div className="flex-1 px-8 py-4 flex flex-col gap-3">
                 <h2 className="text-xl font-semibold mb-4">Utilisateurs</h2>
+                <UserCreationPanel />
                 <AdminUserTable />
             </div>
         </div>

@@ -1,5 +1,5 @@
 import express from "express"
-import { PrismaClient } from "@prisma/client"
+import { Prisma, PrismaClient } from "@prisma/client"
 import { comparePasswords, hashPassword } from "../utils/hash"
 
 const router = express.Router()
@@ -45,8 +45,7 @@ router.get("/users", async (req, res) => {
 			select: {
 				id: true,
 				email: true,
-				name: true,
-				password: true, // risqué
+				name: true
 			},
 		})
 		res.json(users)
@@ -54,6 +53,28 @@ router.get("/users", async (req, res) => {
 		res.status(500).json({ error: "Erreur lors de la récupération des utilisateurs." })
 	}
 })
+
+// Suppression d'un utilisateur
+// DELETE /users/:id
+router.delete("/users/:id", async (req, res) => {
+	const { id } = req.params;
+
+	try {
+		// Grâce à `onDelete: Cascade` dans le schéma, Prisma supprime automatiquement
+		// les conversations et messages liés à cet utilisateur.
+		await prisma.user.delete({
+			where: { id },
+		});
+
+		res.status(204).send();
+	} catch (error) {
+		console.error("Erreur lors de la suppression de l'utilisateur :", error);
+		if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
+			return res.status(404).json({ error: "Utilisateur introuvable." });
+		}
+		res.status(500).json({ error: "Erreur serveur lors de la suppression de l'utilisateur." });
+	}
+});
 
 // Création d'un utilisateur
 // POST /register
