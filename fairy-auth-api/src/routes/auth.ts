@@ -76,6 +76,46 @@ router.delete("/users/:id", async (req, res) => {
 	}
 });
 
+// Modification d'un utilisateur
+// PUT /api/users/:id
+router.put("/users/:id", async (req, res) => {
+	const { id } = req.params;
+	const { name, email, password } = req.body;
+
+	if (!name && !email && !password) {
+		return res.status(400).json({ error: "Au moins un champ (nom, email, mot de passe) est requis." });
+	}
+
+	try {
+		const updateData: { name?: string; email?: string; password?: string } = {};
+
+		if (name) updateData.name = name;
+		if (email) updateData.email = email;
+		if (password && password.length > 0) {
+			updateData.password = await hashPassword(password);
+		}
+
+		const updatedUser = await prisma.user.update({
+			where: { id },
+			data: updateData,
+			select: { id: true, name: true, email: true, role: true }
+		});
+
+		res.json(updatedUser);
+	} catch (error) {
+		console.error("Erreur lors de la modification de l'utilisateur :", error);
+		if (error instanceof Prisma.PrismaClientKnownRequestError) {
+			if (error.code === 'P2025') {
+				return res.status(404).json({ error: "Utilisateur introuvable." });
+			}
+			if (error.code === 'P2002') {
+				return res.status(409).json({ error: "Ce nom d'utilisateur ou cet email est déjà utilisé." });
+			}
+		}
+		res.status(500).json({ error: "Erreur serveur lors de la modification de l'utilisateur." });
+	}
+});
+
 // Création d'un utilisateur
 // POST /register
 router.post("/register", async (req, res) => {

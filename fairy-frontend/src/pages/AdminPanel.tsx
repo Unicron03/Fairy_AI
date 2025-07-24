@@ -5,6 +5,7 @@ import { ColumnDef } from "@tanstack/react-table"
 import { DataTable } from "@/components/ui/data-table";
 import { UserCreationPanel } from "@/components/user/UserCreationPanel";
 import { useUser, AdminUser } from "@/context/UserContext";
+import { UserEditDialog } from "@/components/user/UserEditDialog";
 import { UserDeletionDialog } from "@/components/user/UserDeletionDialog";
 
 export const columns: ColumnDef<AdminUser>[] = [
@@ -13,7 +14,10 @@ export const columns: ColumnDef<AdminUser>[] = [
         header: "Actions",
         cell: ({ row }) => {
             const user = row.original
-            return <UserDeletionDialog userToDelete={user} />
+            return <div className="flex items-center gap-0">
+                <UserEditDialog userToEdit={user} />
+                <UserDeletionDialog userToDelete={user} />
+            </div>
         },
     },
     {

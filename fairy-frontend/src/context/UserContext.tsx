@@ -24,6 +24,7 @@ type UserContextType = {
     logout: () => void
     createUser: (email: string, name: string, password: string, role: "ADMIN" | "USER") => Promise<void>
     isReady: boolean
+    updateUser: (userId: string, data: { name?: string; email?: string; password?: string }) => Promise<void>
     deleteUser: (userId: string) => Promise<void>
     adminUsers: AdminUser[]
     fetchAllUsers: () => Promise<void>
@@ -87,6 +88,30 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         }
     }
 
+    const updateUser = async (userId: string, data: { name?: string; email?: string; password?: string }): Promise<void> => {
+        const updateData = { ...data };
+        if (updateData.password === '') {
+            delete updateData.password;
+        }
+
+        try {
+            const response = await fetch(`http://localhost:3001/api/users/${userId}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(updateData)
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({ error: "Une erreur est survenue." }));
+                throw new Error(errorData.error || "Erreur lors de la modification de l'utilisateur.");
+            }
+            await fetchAllUsers();
+        } catch (err) {
+            console.error("Erreur lors de la modification de l'utilisateur :", err);
+            throw err;
+        }
+    };
+
     const deleteUser = async (userId: string): Promise<void> => {
         try {
             const response = await fetch(`http://localhost:3001/api/users/${userId}`, {
@@ -134,7 +159,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     }
 
     return (
-        <UserContext.Provider value={{ user, setUser, logout, createUser, isReady, adminUsers, fetchAllUsers, deleteUser }}>
+        <UserContext.Provider value={{ user, setUser, logout, createUser, isReady, adminUsers, fetchAllUsers, deleteUser, updateUser }}>
             {children}
         </UserContext.Provider>
     )
