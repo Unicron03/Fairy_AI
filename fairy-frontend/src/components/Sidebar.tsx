@@ -16,6 +16,7 @@ import { useUser } from "@/context/UserContext"
 import { useConversation } from "@/context/ConversationContext"
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
+import { ClipLoader } from "react-spinners"
 
 function GetDateFormatted(isoDate: string) {
 	const date = new Date(isoDate)
@@ -33,7 +34,7 @@ function GetDateFormatted(isoDate: string) {
 
 export function AppSidebar() {
 	const { user, logout } = useUser()
-	const { conversations, setConversations, setSelectedConversationId, createConversation, deleteConversation, renameConversation } = useConversation()
+	const { runningConvId, conversations, setConversations, setSelectedConversationId, createConversation, deleteConversation, renameConversation } = useConversation()
 	
 	const navigate = useNavigate();
 	
@@ -66,7 +67,7 @@ export function AppSidebar() {
 					<SidebarGroupContent>
 						<SidebarMenu>
 							{conversations.map((conv) => (
-								<SidebarMenuItem key={conv.id}>
+								<SidebarMenuItem key={conv.id} className="flex">
 									<SidebarMenuButton asChild>
 										<Link to={`/conversation/${conv.id}`} onClick={() => setSelectedConversationId(conv.id)}>
 											<Inbox />
@@ -100,6 +101,7 @@ export function AppSidebar() {
 											)}
 										</Link>
 									</SidebarMenuButton>
+									<ClipLoader size={20} speedMultiplier={0.7} color="white"/>
 									<DropdownMenu>
 										<DropdownMenuTrigger asChild>
 											<SidebarMenuAction>

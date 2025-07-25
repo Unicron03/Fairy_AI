@@ -28,6 +28,7 @@ export function UserEditDialog({ userToEdit }: UserEditDialogProps) {
     const [name, setName] = useState(userToEdit.name);
     const [email, setEmail] = useState(userToEdit.email);
     const [password, setPassword] = useState("");
+    const [role, setRole] = useState<"ADMIN" | "USER">(userToEdit.role)
 
     useEffect(() => {
         if (open) {
@@ -35,20 +36,23 @@ export function UserEditDialog({ userToEdit }: UserEditDialogProps) {
             setEmail(userToEdit.email);
             setPassword("");
             setShowPassword(false);
+            setRole(userToEdit.role)
         }
     }, [open, userToEdit]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        const dataToUpdate: { name?: string; email?: string; password?: string } = {};
+        const dataToUpdate: { name?: string; email?: string; password?: string; role?: "ADMIN" | "USER" } = {};
+
         if (name !== userToEdit.name) dataToUpdate.name = name;
         if (email !== userToEdit.email) dataToUpdate.email = email;
         if (password) dataToUpdate.password = password;
+        if (role !== userToEdit.role) dataToUpdate.role = role;
 
         if (Object.keys(dataToUpdate).length === 0) {
             toast.info("Aucune modification n'a été effectuée.", {
-                theme: localStorage.getItem("theme") || "light",
+                progressClassName: "fancy-progress-bar", closeOnClick: true, autoClose: 5000, theme: localStorage.getItem("theme") || "light"
             });
             setOpen(false);
             return;
@@ -57,12 +61,12 @@ export function UserEditDialog({ userToEdit }: UserEditDialogProps) {
         try {
             await updateUser(userToEdit.id, dataToUpdate);
             toast.success(`L'utilisateur ${name} a été modifié avec succès.`, {
-                theme: localStorage.getItem("theme") || "light",
+                progressClassName: "fancy-progress-bar", closeOnClick: true, autoClose: 5000, theme: localStorage.getItem("theme") || "light"
             });
             setOpen(false);
         } catch (error: any) {
             toast.error(error.message || "Une erreur est survenue lors de la modification.", {
-                theme: localStorage.getItem("theme") || "light",
+                progressClassName: "fancy-progress-bar", closeOnClick: true, autoClose: 5000, theme: localStorage.getItem("theme") || "light"
             });
         }
     };
@@ -92,6 +96,20 @@ export function UserEditDialog({ userToEdit }: UserEditDialogProps) {
                         <div className="grid gap-3">
                             <Label htmlFor="name-edit">Identifiant</Label>
                             <Input id="name-edit" name="name" value={name} onChange={(e) => setName(e.target.value)} />
+                        </div>
+
+                        <div className="grid gap-3">
+                            <Label htmlFor="role-edit">Rôle</Label>
+                            <select
+                                id="role-edit"
+                                name="role"
+                                value={role}
+                                onChange={(e) => setRole(e.target.value as "ADMIN" | "USER")}
+                                className="border dark:border-white rounded px-3 py-2 bg-white dark:bg-black text-sm"
+                            >
+                                <option value="USER">Utilisateur</option>
+                                <option value="ADMIN">Administrateur</option>
+                            </select>
                         </div>
 
                         <div className="grid gap-3 relative">

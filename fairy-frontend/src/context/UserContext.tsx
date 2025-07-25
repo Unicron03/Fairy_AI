@@ -7,12 +7,15 @@ export type User = {
     name: string
     email: string
     role: "ADMIN" | "USER"
+    createdAt: Date
 }
 
 export type AdminUser = {
     id: string
     name: string
     email: string
+    role: "ADMIN" | "USER"
+    createdAt?: string
     conversationsCount?: number
     messagesCount?: number
     tokensCount?: number
@@ -24,7 +27,7 @@ type UserContextType = {
     logout: () => void
     createUser: (email: string, name: string, password: string, role: "ADMIN" | "USER") => Promise<void>
     isReady: boolean
-    updateUser: (userId: string, data: { name?: string; email?: string; password?: string }) => Promise<void>
+    updateUser: (userId: string, data: { name?: string; email?: string; password?: string; role?: "ADMIN" | "USER" }) => Promise<void>
     deleteUser: (userId: string) => Promise<void>
     adminUsers: AdminUser[]
     fetchAllUsers: () => Promise<void>
@@ -88,13 +91,14 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         }
     }
 
-    const updateUser = async (userId: string, data: { name?: string; email?: string; password?: string }): Promise<void> => {
+    const updateUser = async (userId: string, data: { name?: string; email?: string; password?: string; role?: "ADMIN" | "USER" }): Promise<void> => {
         const updateData = { ...data };
         if (updateData.password === '') {
             delete updateData.password;
         }
 
         try {
+            console.log(updateData.role)
             const response = await fetch(`http://localhost:3001/api/users/${userId}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
@@ -144,6 +148,10 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     const fetchAllUsers = async () => {
         try {
             const res = await fetch("http://localhost:3001/api/users")
+            if (!res.ok) {
+                const errorData = await res.json().catch(() => ({ error: "Une erreur de communication avec le serveur." }));
+                throw new Error(errorData.error || "Erreur lors de la récupération des utilisateurs.");
+            }
             const users: AdminUser[] = await res.json()
 
             const usersWithStats = await Promise.all(
@@ -153,8 +161,9 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
                 })
             )
             setAdminUsers(usersWithStats)
-        } catch (error) {
+        } catch (error: any) {
             console.error("Erreur de récupération des utilisateurs", error)
+            // Optionnel : vous pourriez afficher un toast d'erreur ici
         }
     }
 

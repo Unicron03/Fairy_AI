@@ -12,6 +12,8 @@ export type Conversation = {
 type ConversationContextType = {
     conversations: Conversation[]
     selectedConversationId: string | null
+    runningConvId: string | null
+    setRunningConvId: (id: string | null) => void
     setConversations: React.Dispatch<React.SetStateAction<Conversation[]>>
     setSelectedConversationId: (id: string | null) => void
     createConversation: () => Promise<Conversation | null>
@@ -31,6 +33,9 @@ export const ConversationProvider: React.FC<{ children: React.ReactNode }> = ({ 
     const [selectedConversationId, _setSelectedConversationId] = useState<string | null>(() => {
         return localStorage.getItem("selectedConversationId");
     });
+    const [runningConvId, _setRunningConvId] = useState<string | null>(() => {
+        return localStorage.getItem("runningConvId");
+    });
 
     // Fonction personnalisée pour garder en sync avec localStorage
     const setSelectedConversationId = (id: string | null) => {
@@ -40,6 +45,16 @@ export const ConversationProvider: React.FC<{ children: React.ReactNode }> = ({ 
             localStorage.removeItem("selectedConversationId");
         }
         _setSelectedConversationId(id);
+    };
+
+    // Fonction personnalisée pour garder en sync avec localStorage
+    const setRunningConvId = (id: string | null) => {
+        if (id) {
+            localStorage.setItem("runningConvId", id);
+        } else {
+            localStorage.removeItem("runningConvId");
+        }
+        _setRunningConvId(id);
     };
 
     useEffect(() => {
@@ -141,6 +156,8 @@ export const ConversationProvider: React.FC<{ children: React.ReactNode }> = ({ 
         <ConversationContext.Provider value={{
             conversations,
             selectedConversationId,
+            runningConvId,
+            setRunningConvId,
             setConversations,
             setSelectedConversationId,
             createConversation,

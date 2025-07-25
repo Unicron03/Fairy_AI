@@ -38,7 +38,7 @@ export default function ConversationPage() {
     const MAX_HEIGHT_QUESTION_AREA = 300;
     const MARGIN_HISTORY_QUESTION_PANEL = 30;
 
-    const { selectedConversationId, saveConversation } = useConversation()
+    const { selectedConversationId, saveConversation, runningConvId, setRunningConvId } = useConversation()
     const [messages, setMessages] = useState<Message[]>([])
     const { user } = useUser();
 
@@ -52,7 +52,7 @@ export default function ConversationPage() {
     const [atBottom, setAtBottom] = useState(true)
     const [abortController, setAbortController] = useState<AbortController | null>(null)
     const historyRef = useRef<HTMLDivElement>(null)
-    const [runningConvId, setRunningConvId] = useState<string | null>(null)
+
     const [pendingQuestion, setPendingQuestion] = useState<string | null>(null)
     const bottomRef = useRef<HTMLDivElement | null>(null)
     const [inputHeight, setInputHeight] = useState(MARGIN_HISTORY_QUESTION_PANEL)

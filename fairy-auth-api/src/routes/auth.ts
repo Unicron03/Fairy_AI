@@ -45,12 +45,21 @@ router.get("/users", async (req, res) => {
 			select: {
 				id: true,
 				email: true,
-				name: true
+				name: true,
+				createdAt: true,
+				role: true
 			},
-		})
-		res.json(users)
+		});
+
+		// Il est plus sûr de sérialiser manuellement les dates avant de les envoyer.
+		const serializableUsers = users.map(user => ({
+			...user,
+			createdAt: user.createdAt.toISOString(),
+		}));
+		res.json(serializableUsers);
 	} catch (error) {
-		res.status(500).json({ error: "Erreur lors de la récupération des utilisateurs." })
+		console.error("Erreur lors de la récupération des utilisateurs:", error);
+		res.status(500).json({ error: "Erreur serveur lors de la récupération des utilisateurs." });
 	}
 })
 
@@ -80,20 +89,21 @@ router.delete("/users/:id", async (req, res) => {
 // PUT /api/users/:id
 router.put("/users/:id", async (req, res) => {
 	const { id } = req.params;
-	const { name, email, password } = req.body;
+	const { name, email, password, role } = req.body;
 
-	if (!name && !email && !password) {
-		return res.status(400).json({ error: "Au moins un champ (nom, email, mot de passe) est requis." });
+	if (!name && !email && !password && !role) {
+		return res.status(400).json({ error: "Au moins un champ (nom, email, mot de passe, role) est requis." });
 	}
 
 	try {
-		const updateData: { name?: string; email?: string; password?: string } = {};
+		const updateData: { name?: string; email?: string; password?: string; role?: 'ADMIN' | 'USER' } = {};
 
 		if (name) updateData.name = name;
 		if (email) updateData.email = email;
 		if (password && password.length > 0) {
 			updateData.password = await hashPassword(password);
 		}
+		if (role) updateData.role = role;
 
 		const updatedUser = await prisma.user.update({
 			where: { id },
