@@ -200,6 +200,7 @@ export default function ConversationPage() {
             abortController.abort();
             setLoading(false);
             setPendingQuestion(null);
+            setRunningConvId(null)
         }
     };
     

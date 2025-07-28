@@ -39,4 +39,5 @@ model Message {
   answer          String
   tokens          Int
   duration        Int
+  createdAt       DateTime      @default(now())
 }

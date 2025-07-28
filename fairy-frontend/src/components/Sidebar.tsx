@@ -67,59 +67,80 @@ export function AppSidebar() {
 					<SidebarGroupContent>
 						<SidebarMenu>
 							{conversations.map((conv) => (
-								<SidebarMenuItem key={conv.id} className="flex">
-									<SidebarMenuButton asChild>
-										<Link to={`/conversation/${conv.id}`} onClick={() => setSelectedConversationId(conv.id)}>
-											<Inbox />
-											{editingId === conv.id ? (
-												<input
-													ref={inputRef}
-													autoFocus
-													onFocus={(e) => {
-														setTimeout(() => e.target.select(), 0)
-													}}
-													className="bg-transparent border-b border-gray-400 outline-none w-full"
-													value={editValue}
-													onChange={(e) => setEditValue(e.target.value)}
-													onBlur={async () => {
-														await renameConversation(conv.id, editValue.trim());
-														setEditingId(null);
-													}}
-													onKeyDown={async (e) => {
-														if (e.key === "Enter") {
+								<SidebarMenuItem key={conv.id}>
+									<div className="flex items-center gap-2 w-full">
+										{/* Titre */}
+										<div className="min-w-0 w-[150px]">
+											<SidebarMenuButton asChild className="w-full">
+												<Link
+													to={`/conversation/${conv.id}`}
+													onClick={() => setSelectedConversationId(conv.id)}
+													className="flex items-center gap-2 truncate"
+												>
+												<Inbox />
+												{editingId === conv.id ? (
+													<input
+														ref={inputRef}
+														autoFocus
+														onFocus={(e) => setTimeout(() => e.target.select(), 0)}
+														className="bg-transparent border-b border-gray-400 outline-none w-full"
+														value={editValue}
+														onChange={(e) => setEditValue(e.target.value)}
+														onBlur={async () => {
 															await renameConversation(conv.id, editValue.trim());
 															setEditingId(null);
-														}
-														if (e.key === "Escape") {
-															setEditValue(conv.convName)
-															setEditingId(null)
-														}
-													}}
-												/>
-											) : (
-												<span>{conv.convName || GetDateFormatted(conv.createdAt)}</span>
-											)}
-										</Link>
-									</SidebarMenuButton>
-									<ClipLoader size={20} speedMultiplier={0.7} color="white"/>
-									<DropdownMenu>
-										<DropdownMenuTrigger asChild>
-											<SidebarMenuAction>
-												<MoreHorizontal />
-											</SidebarMenuAction>
-										</DropdownMenuTrigger>
-										<DropdownMenuContent side="right" align="start">
-											<DropdownMenuItem onClick={() => {
-													setEditingId(conv.id);
-													setEditValue(conv.convName || GetDateFormatted(conv.createdAt) || "");
-												}} >
-												<span>Renommer</span>
-											</DropdownMenuItem>
-											<DropdownMenuItem onClick={() => deleteConversation(conv.id)}>
-												<span>Supprimer</span>
-											</DropdownMenuItem>
-										</DropdownMenuContent>
-									</DropdownMenu>
+														}}
+														onKeyDown={async (e) => {
+															if (e.key === "Enter") {
+																await renameConversation(conv.id, editValue.trim());
+																setEditingId(null);
+															}
+															if (e.key === "Escape") {
+																setEditValue(conv.convName)
+																setEditingId(null)
+															}
+														}}
+													/>
+												) : (
+													<span className="truncate">
+														{conv.convName || GetDateFormatted(conv.createdAt)}
+													</span>
+												)}
+												</Link>
+											</SidebarMenuButton>
+										</div>
+
+										{/* Spinner */}
+										<div className="flex-shrink-0 w-6 h-6 flex items-center justify-center">
+											{runningConvId === conv.id && 
+												<ClipLoader size={20} speedMultiplier={0.7} color="white"/>
+											}
+										</div>
+
+										{/* Dropdown */}
+										<div className="flex-shrink-0">
+											<DropdownMenu>
+												<DropdownMenuTrigger asChild>
+													<SidebarMenuAction>
+														<MoreHorizontal />
+													</SidebarMenuAction>
+												</DropdownMenuTrigger>
+												<DropdownMenuContent side="right" align="start">
+													<DropdownMenuItem
+														onClick={() => {
+															setEditingId(conv.id);
+															setEditValue(conv.convName || GetDateFormatted(conv.createdAt) || "");
+														}}
+													>
+														<span>Renommer</span>
+													</DropdownMenuItem>
+													<DropdownMenuItem onClick={() => deleteConversation(conv.id)}>
+														<span>Supprimer</span>
+													</DropdownMenuItem>
+												</DropdownMenuContent>
+											</DropdownMenu>
+										</div>
+									</div>
 								</SidebarMenuItem>
 							))}
 						</SidebarMenu>

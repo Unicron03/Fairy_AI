@@ -33,9 +33,7 @@ export const ConversationProvider: React.FC<{ children: React.ReactNode }> = ({ 
     const [selectedConversationId, _setSelectedConversationId] = useState<string | null>(() => {
         return localStorage.getItem("selectedConversationId");
     });
-    const [runningConvId, _setRunningConvId] = useState<string | null>(() => {
-        return localStorage.getItem("runningConvId");
-    });
+    const [runningConvId, _setRunningConvId] = useState<string | null>(null);
 
     // Fonction personnalisée pour garder en sync avec localStorage
     const setSelectedConversationId = (id: string | null) => {
@@ -47,13 +45,7 @@ export const ConversationProvider: React.FC<{ children: React.ReactNode }> = ({ 
         _setSelectedConversationId(id);
     };
 
-    // Fonction personnalisée pour garder en sync avec localStorage
     const setRunningConvId = (id: string | null) => {
-        if (id) {
-            localStorage.setItem("runningConvId", id);
-        } else {
-            localStorage.removeItem("runningConvId");
-        }
         _setRunningConvId(id);
     };
 
