@@ -3048,6 +3048,7 @@ export namespace Prisma {
     answer: string | null
     tokens: number | null
     duration: number | null
+    createdAt: Date | null
   }
 
   export type MessageMaxAggregateOutputType = {
@@ -3057,6 +3058,7 @@ export namespace Prisma {
     answer: string | null
     tokens: number | null
     duration: number | null
+    createdAt: Date | null
   }
 
   export type MessageCountAggregateOutputType = {
@@ -3066,6 +3068,7 @@ export namespace Prisma {
     answer: number
     tokens: number
     duration: number
+    createdAt: number
     _all: number
   }
 
@@ -3087,6 +3090,7 @@ export namespace Prisma {
     answer?: true
     tokens?: true
     duration?: true
+    createdAt?: true
   }
 
   export type MessageMaxAggregateInputType = {
@@ -3096,6 +3100,7 @@ export namespace Prisma {
     answer?: true
     tokens?: true
     duration?: true
+    createdAt?: true
   }
 
   export type MessageCountAggregateInputType = {
@@ -3105,6 +3110,7 @@ export namespace Prisma {
     answer?: true
     tokens?: true
     duration?: true
+    createdAt?: true
     _all?: true
   }
 
@@ -3201,6 +3207,7 @@ export namespace Prisma {
     answer: string
     tokens: number
     duration: number
+    createdAt: Date
     _count: MessageCountAggregateOutputType | null
     _avg: MessageAvgAggregateOutputType | null
     _sum: MessageSumAggregateOutputType | null
@@ -3229,6 +3236,7 @@ export namespace Prisma {
     answer?: boolean
     tokens?: boolean
     duration?: boolean
+    createdAt?: boolean
     conversation?: boolean | ConversationDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["message"]>
 
@@ -3241,9 +3249,10 @@ export namespace Prisma {
     answer?: boolean
     tokens?: boolean
     duration?: boolean
+    createdAt?: boolean
   }
 
-  export type MessageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "conversationId" | "question" | "answer" | "tokens" | "duration", ExtArgs["result"]["message"]>
+  export type MessageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "conversationId" | "question" | "answer" | "tokens" | "duration" | "createdAt", ExtArgs["result"]["message"]>
   export type MessageInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     conversation?: boolean | ConversationDefaultArgs<ExtArgs>
   }
@@ -3260,6 +3269,7 @@ export namespace Prisma {
       answer: string
       tokens: number
       duration: number
+      createdAt: Date
     }, ExtArgs["result"]["message"]>
     composites: {}
   }
@@ -3636,6 +3646,7 @@ export namespace Prisma {
     readonly answer: FieldRef<"Message", 'String'>
     readonly tokens: FieldRef<"Message", 'Int'>
     readonly duration: FieldRef<"Message", 'Int'>
+    readonly createdAt: FieldRef<"Message", 'DateTime'>
   }
     
 
@@ -4039,7 +4050,8 @@ export namespace Prisma {
     question: 'question',
     answer: 'answer',
     tokens: 'tokens',
-    duration: 'duration'
+    duration: 'duration',
+    createdAt: 'createdAt'
   };
 
   export type MessageScalarFieldEnum = (typeof MessageScalarFieldEnum)[keyof typeof MessageScalarFieldEnum]
@@ -4258,6 +4270,7 @@ export namespace Prisma {
     answer?: StringFilter<"Message"> | string
     tokens?: IntFilter<"Message"> | number
     duration?: IntFilter<"Message"> | number
+    createdAt?: DateTimeFilter<"Message"> | Date | string
     conversation?: XOR<ConversationScalarRelationFilter, ConversationWhereInput>
   }
 
@@ -4268,6 +4281,7 @@ export namespace Prisma {
     answer?: SortOrder
     tokens?: SortOrder
     duration?: SortOrder
+    createdAt?: SortOrder
     conversation?: ConversationOrderByWithRelationInput
     _relevance?: MessageOrderByRelevanceInput
   }
@@ -4282,6 +4296,7 @@ export namespace Prisma {
     answer?: StringFilter<"Message"> | string
     tokens?: IntFilter<"Message"> | number
     duration?: IntFilter<"Message"> | number
+    createdAt?: DateTimeFilter<"Message"> | Date | string
     conversation?: XOR<ConversationScalarRelationFilter, ConversationWhereInput>
   }, "id">
 
@@ -4292,6 +4307,7 @@ export namespace Prisma {
     answer?: SortOrder
     tokens?: SortOrder
     duration?: SortOrder
+    createdAt?: SortOrder
     _count?: MessageCountOrderByAggregateInput
     _avg?: MessageAvgOrderByAggregateInput
     _max?: MessageMaxOrderByAggregateInput
@@ -4309,6 +4325,7 @@ export namespace Prisma {
     answer?: StringWithAggregatesFilter<"Message"> | string
     tokens?: IntWithAggregatesFilter<"Message"> | number
     duration?: IntWithAggregatesFilter<"Message"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"Message"> | Date | string
   }
 
   export type UserCreateInput = {
@@ -4436,6 +4453,7 @@ export namespace Prisma {
     answer: string
     tokens: number
     duration: number
+    createdAt?: Date | string
     conversation: ConversationCreateNestedOneWithoutMessagesInput
   }
 
@@ -4446,6 +4464,7 @@ export namespace Prisma {
     answer: string
     tokens: number
     duration: number
+    createdAt?: Date | string
   }
 
   export type MessageUpdateInput = {
@@ -4454,6 +4473,7 @@ export namespace Prisma {
     answer?: StringFieldUpdateOperationsInput | string
     tokens?: IntFieldUpdateOperationsInput | number
     duration?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     conversation?: ConversationUpdateOneRequiredWithoutMessagesNestedInput
   }
 
@@ -4464,6 +4484,7 @@ export namespace Prisma {
     answer?: StringFieldUpdateOperationsInput | string
     tokens?: IntFieldUpdateOperationsInput | number
     duration?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type MessageCreateManyInput = {
@@ -4473,6 +4494,7 @@ export namespace Prisma {
     answer: string
     tokens: number
     duration: number
+    createdAt?: Date | string
   }
 
   export type MessageUpdateManyMutationInput = {
@@ -4481,6 +4503,7 @@ export namespace Prisma {
     answer?: StringFieldUpdateOperationsInput | string
     tokens?: IntFieldUpdateOperationsInput | number
     duration?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type MessageUncheckedUpdateManyInput = {
@@ -4490,6 +4513,7 @@ export namespace Prisma {
     answer?: StringFieldUpdateOperationsInput | string
     tokens?: IntFieldUpdateOperationsInput | number
     duration?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type StringFilter<$PrismaModel = never> = {
@@ -4719,6 +4743,7 @@ export namespace Prisma {
     answer?: SortOrder
     tokens?: SortOrder
     duration?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type MessageAvgOrderByAggregateInput = {
@@ -4733,6 +4758,7 @@ export namespace Prisma {
     answer?: SortOrder
     tokens?: SortOrder
     duration?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type MessageMinOrderByAggregateInput = {
@@ -4742,6 +4768,7 @@ export namespace Prisma {
     answer?: SortOrder
     tokens?: SortOrder
     duration?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type MessageSumOrderByAggregateInput = {
@@ -5137,6 +5164,7 @@ export namespace Prisma {
     answer: string
     tokens: number
     duration: number
+    createdAt?: Date | string
   }
 
   export type MessageUncheckedCreateWithoutConversationInput = {
@@ -5145,6 +5173,7 @@ export namespace Prisma {
     answer: string
     tokens: number
     duration: number
+    createdAt?: Date | string
   }
 
   export type MessageCreateOrConnectWithoutConversationInput = {
@@ -5212,6 +5241,7 @@ export namespace Prisma {
     answer?: StringFilter<"Message"> | string
     tokens?: IntFilter<"Message"> | number
     duration?: IntFilter<"Message"> | number
+    createdAt?: DateTimeFilter<"Message"> | Date | string
   }
 
   export type ConversationCreateWithoutMessagesInput = {
@@ -5290,6 +5320,7 @@ export namespace Prisma {
     answer: string
     tokens: number
     duration: number
+    createdAt?: Date | string
   }
 
   export type MessageUpdateWithoutConversationInput = {
@@ -5298,6 +5329,7 @@ export namespace Prisma {
     answer?: StringFieldUpdateOperationsInput | string
     tokens?: IntFieldUpdateOperationsInput | number
     duration?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type MessageUncheckedUpdateWithoutConversationInput = {
@@ -5306,6 +5338,7 @@ export namespace Prisma {
     answer?: StringFieldUpdateOperationsInput | string
     tokens?: IntFieldUpdateOperationsInput | number
     duration?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type MessageUncheckedUpdateManyWithoutConversationInput = {
@@ -5314,6 +5347,7 @@ export namespace Prisma {
     answer?: StringFieldUpdateOperationsInput | string
     tokens?: IntFieldUpdateOperationsInput | number
     duration?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 
