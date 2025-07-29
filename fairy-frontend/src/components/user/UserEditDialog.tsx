@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Eye, EyeOff, Edit } from "lucide-react";
+import { Eye, EyeOff, Edit, TriangleAlert } from "lucide-react";
 import { toast } from "react-toastify";
 import { useUser, AdminUser } from "@/context/UserContext";
 
@@ -21,7 +21,7 @@ interface UserEditDialogProps {
 }
 
 export function UserEditDialog({ userToEdit }: UserEditDialogProps) {
-    const { updateUser } = useUser();
+    const { user, updateUser } = useUser();
     const [showPassword, setShowPassword] = useState(false);
     const [open, setOpen] = useState(false);
 
@@ -82,8 +82,14 @@ export function UserEditDialog({ userToEdit }: UserEditDialogProps) {
                 <form onSubmit={handleSubmit}>
                     <DialogHeader>
                         <DialogTitle>Modifier l'utilisateur</DialogTitle>
-                        <DialogDescription className="text-[#a1a1a1]">
-                            Modifiez les informations de <strong>{userToEdit.name}</strong>. Laissez le mot de passe vide pour ne pas le changer.
+                        <DialogDescription className="flex" style={{flexDirection: "column", gap: "0.5rem"}}>
+                            <span className="text-[#a1a1a1]">Modifiez les informations de <strong>{userToEdit.name}</strong>. Laissez le mot de passe vide pour ne pas le changer.</span>
+                            {user?.id === userToEdit.id ?
+                                <div className="w-fit flex items-center" style={{backgroundColor: "rgba(185, 28, 28, 0.8)", borderRadius: "6px", padding: "8px", color: "white"}}>
+                                    <TriangleAlert size={24}/>
+                                    <span style={{fontWeight: "bold"}}>&nbsp;VOUS MODIFIEZ VOTRE PROFIL</span>
+                                </div>
+                            : ""}
                         </DialogDescription>
                     </DialogHeader>
 

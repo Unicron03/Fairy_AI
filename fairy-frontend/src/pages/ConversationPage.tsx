@@ -21,17 +21,44 @@ type Message = {
     duration: number
 }
 
-function highlightMatch(text: string, search: string): string | (string | JSX.Element)[] {
-  if (!search) return text;
+function escapeRegExp(text: string) {
+    return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
 
-  const regex = new RegExp(`(${search})`, 'gi');
-  return text.split(regex).map((part, index) =>
-    part.toLowerCase() === search.toLowerCase() ? (
-      <strong key={index} className="font-bold">{part}</strong>
-    ) : (
-      part
-    )
-  );
+function highlightMatch(text: string, search: string): (string | JSX.Element)[] {
+    if (!search) return [text];
+
+    const escapedSearch = escapeRegExp(search);
+    const regex = new RegExp(escapedSearch, "gi");
+
+    const result: (string | JSX.Element)[] = [];
+    let lastIndex = 0;
+
+    for (const match of text.matchAll(regex)) {
+        const start = match.index!;
+        const end = start + match[0].length;
+
+        // Texte avant la correspondance
+        if (start > lastIndex) {
+            result.push(text.slice(lastIndex, start));
+        }
+
+        // Correspondance surlignée
+        result.push(
+            <strong key={start} className="font-bold">
+                {text.slice(start, end)}
+            </strong>
+        );
+
+        lastIndex = end;
+    }
+
+    // Texte après la dernière correspondance
+    if (lastIndex < text.length) {
+        result.push(text.slice(lastIndex));
+    }
+
+    return result;
 }
 
 export default function ConversationPage() {
@@ -156,6 +183,7 @@ export default function ConversationPage() {
                     setAnswer(res.data.answer);
                     if (selectedConversationId) saveConversation(selectedConversationId, res.data.answer, res.data.tokens_used, res.data.duration, question)
                     setPendingQuestion(null);
+                    setRunningConvId(null)
                 } catch (err) {
                     if (axios.isCancel(err)) {
                     } else {
@@ -183,6 +211,7 @@ export default function ConversationPage() {
                 setAnswer(res.data.answer);
                 if (selectedConversationId) saveConversation(selectedConversationId, res.data.answer, res.data.tokens_used, res.data.duration, question)
                 setPendingQuestion(null);
+                setRunningConvId(null)
             } catch (err) {
                 if (axios.isCancel(err)) {
                 } else {
@@ -265,7 +294,7 @@ export default function ConversationPage() {
             {/* Logo */}
             <header style={{padding: "15px"}} className="sticky flex justify-center top-0 left-0 right-0 mb-[45px] bg-white dark:bg-[#09090b] z-30">
                 <div className="absolute w-[-webkit-fill-available] top-[15px] flex justify-center">
-                    <img style={{height: "70px", filter: "grayscale(60%)"}} src="../src/logo.png"></img>
+                    <img style={{height: "70px"}} src="../src/logo.png"></img>
                 </div>
 
                 <div className="w-full flex justify-between items-center">
@@ -282,7 +311,7 @@ export default function ConversationPage() {
                 className="flex-1 overflow-y-auto px-4 space-y-[22px] flex flex-col" ref={historyRef} id="history" onScroll={() => actionScroll()}
                 style={{gap: "10px", scrollbarColor: "#80808057 transparent", paddingBottom: inputHeight}}
             >
-                {paginatedHistory.slice().reverse().map((entry, index) => (
+                {paginatedHistory.slice().map((entry, index) => (
                     <HistoryCard key={index} index={index} question={highlightMatch(entry.question, search)} answer={highlightMatch(entry.answer, search)} tokens={entry.tokens} duration={entry.duration} />
                 ))}
 

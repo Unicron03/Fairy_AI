@@ -97,7 +97,7 @@ export default function AdminPanel() {
             {/* Logo */}
             <header style={{padding: "15px"}} className="sticky flex justify-center top-0 left-0 right-0 mb-[25px] bg-white dark:bg-[#09090b] z-30">
                 <div className="absolute w-[-webkit-fill-available] top-[15px] flex justify-center">
-                    <img style={{height: "70px", filter: "grayscale(60%)"}} src="src/logo.png"></img>
+                    <img style={{height: "70px"}} src="src/logo.png"></img>
                 </div>
 
                 <div className="w-full flex justify-between items-center">

@@ -34,7 +34,7 @@ function GetDateFormatted(isoDate: string) {
 
 export function AppSidebar() {
 	const { user, logout } = useUser()
-	const { runningConvId, conversations, setConversations, setSelectedConversationId, createConversation, deleteConversation, renameConversation } = useConversation()
+	const { runningConvId, conversations, selectedConversationId, setConversations, setSelectedConversationId, createConversation, deleteConversation, renameConversation } = useConversation()
 	
 	const navigate = useNavigate();
 	
@@ -67,7 +67,12 @@ export function AppSidebar() {
 					<SidebarGroupContent>
 						<SidebarMenu>
 							{conversations.map((conv) => (
-								<SidebarMenuItem key={conv.id}>
+								<SidebarMenuItem
+									key={conv.id}
+									className={`${
+										selectedConversationId === conv.id ? "bg-gray-200 dark:bg-[#3a3a3a]" : ""
+									}`}
+								>
 									<div className="flex items-center gap-2 w-full">
 										{/* Titre */}
 										<div className="min-w-0 w-[150px]">
@@ -102,7 +107,7 @@ export function AppSidebar() {
 														}}
 													/>
 												) : (
-													<span className="truncate">
+													<span className="truncate" title={conv.convName || GetDateFormatted(conv.createdAt)}>
 														{conv.convName || GetDateFormatted(conv.createdAt)}
 													</span>
 												)}

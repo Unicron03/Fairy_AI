@@ -202,7 +202,7 @@ router.get("/conversations/:id", async (req, res) => {
 			where: { id },
 			include: {
 				messages: {
-					// orderBy: { createdAt: "asc" } // pour les afficher dans l’ordre
+					orderBy: { createdAt: "asc" } // pour les afficher dans l’ordre
 				}
 			}
 		});
