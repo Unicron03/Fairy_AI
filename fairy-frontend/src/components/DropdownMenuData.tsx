@@ -15,11 +15,11 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
 import { Paperclip } from "lucide-react"
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import React from "react"
 import { toast } from 'react-toastify';
 import DataVisualizer from "./DataVisualizer"
-import { preImportedFiles } from "@/App"
+import { FileType, loadPreImportedFiles } from "@/App"
 
 type DropdownMenuDataProps = {
   file: File | null;
@@ -33,6 +33,11 @@ export default function DropdownMenuData({ file, setFile, checked, setChecked }:
   const [position, setPosition] = React.useState("locative");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [localFile, setLocalFile] = useState<File | null>(file);
+  const [preImportedFiles, setPreImportedFiles] = useState<FileType[]>([]);
+
+  useEffect(() => {
+    loadPreImportedFiles().then(setPreImportedFiles);
+  }, []);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
@@ -47,18 +52,19 @@ export default function DropdownMenuData({ file, setFile, checked, setChecked }:
     }
   };
 
-  const handlePredefinedCsvSelect = (value: string) => {
-    setPosition(value);
-  
-    const fakeContent = `Contenu fictif de ${value}.csv`;
-    const blob = new Blob([fakeContent], { type: "text/csv" });
-    const fakeFile = new File([blob], `${value}.csv`, { type: "text/csv" });
-  
-    setLocalFile(fakeFile);
-    setFile(fakeFile);
-  
-    console.log(`Fichier pré-défini sélectionné : /csv/${value}.csv`);
+   const handlePredefinedCsvSelect = (value: string) => {
+  setPosition(value);
+
+  const selected = preImportedFiles.find((f) => f.value === value);
+  if (!selected) {
+    toast.error("Fichier introuvable.");
+    return;
   }
+
+  setLocalFile(selected.file);
+  setFile(selected.file);
+};
+
 
   return (
     <div className="">

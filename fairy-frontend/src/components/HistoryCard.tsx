@@ -9,6 +9,7 @@ type HistoryCardProps = {
     answer: string | (string | JSX.Element)[] | React.ReactElement;
     tokens?: number;
     duration?: number;
+    file?: string;
 };
 
 function formatDuration(duration: number): string {
@@ -35,7 +36,7 @@ function flattenText(node: ReactNode): string {
   return "";
 }
 
-const HistoryCard: React.FC<HistoryCardProps> = ({ index, question, answer, tokens, duration }) => {
+const HistoryCard: React.FC<HistoryCardProps> = ({ index, question, answer, tokens, duration, file }) => {
     const [copiedAnswer, setCopiedAnswer] = useState(false);
     const [copiedQuestion, setCopiedQuestion] = useState(false);
 
@@ -54,14 +55,14 @@ const HistoryCard: React.FC<HistoryCardProps> = ({ index, question, answer, toke
     return (
         <div
             className="my-0 text-black dark:text-white"
-            style={{display: "flex", flexDirection: "column", maxWidth: "850px", alignSelf: "center", width: "-webkit-fill-available"}}
+            style={{display: "flex", flexDirection: "column", maxWidth: "850px", alignSelf: "center", width: "-webkit-fill-available", gap: "1.5rem"}}
         >
             <div
                 className="relative group max-w-[500px] w-fit self-end mb-[20px] p-4 bg-gray-100 dark:bg-[#27272a] rounded-[calc(4px+0.75rem)]"
                 style={{zIndex: index == 0 ? 50 : 0}}
             >
                 <span className="whitespace-pre-wrap" style={{paddingBlock: "28px"}}>{question}</span>
-
+                {file && <i className="absolute -bottom-8 left-0 text-[#a1a1a1]" style={{fontSize: "small"}}>Fichier utilisé : {file}</i>}
                 <button
                     onClick={() => copyText(flattenText(question), true)}
                     className="absolute -bottom-8 right-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200"

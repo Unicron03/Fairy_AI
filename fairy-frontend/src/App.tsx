@@ -13,14 +13,35 @@ import { ConversationProvider } from "./context/ConversationContext"
 export type FileType = {
   value: string
   label: string
+  file: File
 }
 
-export const preImportedFiles: FileType[] = [
-  { value: "gestion-locative", label: "Gestion locative" },
-  { value: "gestion-patrimoine", label: "Gestion patrimoine" },
-  { value: "bons-commande", label: "Bons de commande" },
-  { value: "suivi-budgetaire", label: "Suivi budgétaire" }
-]
+const fileDefinitions = [
+  { value: "example-file", label: "Exemple fichier pays", path: "country_full.csv" },
+];
+
+export async function loadPreImportedFiles(): Promise<FileType[]> {
+  const files: FileType[] = [];
+
+  for (const def of fileDefinitions) {
+    try {
+      const response = await fetch(`/datas/${def.path}`);
+      const blob = await response.blob();
+
+      const file = new File([blob], def.path, { type: blob.type });
+
+      files.push({
+        value: def.value,
+        label: def.label,
+        file,
+      });
+    } catch (error) {
+      console.error(`Erreur lors du chargement de ${def.path}:`, error);
+    }
+  }
+
+  return files;
+}
 
 function Layout() {
   const { state } = useSidebar()

@@ -9,6 +9,15 @@ export type Conversation = {
     convName: string
 }
 
+export type Message = {
+    id: string
+    question: string
+    answer: string
+    tokens: number
+    duration: number
+    file?: string
+}
+
 type ConversationContextType = {
     conversations: Conversation[]
     selectedConversationId: string | null
@@ -18,7 +27,7 @@ type ConversationContextType = {
     setSelectedConversationId: (id: string | null) => void
     createConversation: () => Promise<Conversation | null>
     deleteConversation: (id: string) => Promise<void>
-    saveConversation: (id: string, answer: string, tokens: number, duration: number, question: string) => Promise<void>
+    saveConversation: (id: string, answer: string, tokens: number, duration: number, question: string, file?: string) => Promise<void>
     renameConversation: (id: string, newTitle: string) => Promise<void>
     fetchUserStats: (userId: string) => Promise<{ conversationsCount: number, messagesCount: number, tokensCount: number } | null>
 }
@@ -98,12 +107,12 @@ export const ConversationProvider: React.FC<{ children: React.ReactNode }> = ({ 
         }
     }
 
-    const saveConversation = async (id: string, answer: string, tokens: number, duration: number, question: string) => {
+    const saveConversation = async (id: string, answer: string, tokens: number, duration: number, question: string, file?: string) => {
         try {
             await fetch(`http://localhost:3001/api/conversations/${id}/messages`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ id: id, question: question, answer: answer, tokens: tokens, duration: duration })
+                body: JSON.stringify({ id: id, question: question, answer: answer, tokens: tokens, duration: duration, file: file })
             })
         } catch (err) {
             console.error("Erreur lors de la sauvegarde de la conversation :", err)

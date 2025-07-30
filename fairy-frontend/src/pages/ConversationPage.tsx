@@ -1,6 +1,6 @@
 import ThemeToggle from "@/components/ThemeToggle"
 import { SidebarTrigger } from "@/components/ui/sidebar"
-import { useConversation } from "@/context/ConversationContext";
+import { useConversation, Message } from "@/context/ConversationContext";
 import HistoryCard from "@/components/HistoryCard";
 import { useState, useEffect, JSX, useRef } from "react";
 import { HistoricFilter } from "@/components/HistoricFilter";
@@ -12,14 +12,6 @@ import ExportDialog from "@/components/ExportDialog";
 import InfoPanel from "@/components/InfoPanel";
 import { CircleStop, SendHorizonal, ArrowDown } from "lucide-react";
 import { useUser } from "@/context/UserContext";
-
-type Message = {
-    id: string
-    question: string
-    answer: string
-    tokens: number
-    duration: number
-}
 
 function escapeRegExp(text: string) {
     return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -88,6 +80,7 @@ export default function ConversationPage() {
     const [csvTable, setCsvTable] = useState<string[][]>([])
     const [answer, setAnswer] = useState<string>("")
     const [arrowdownBottom, setArrowdownBottom] = useState(divQuestionRef.current?.offsetHeight)
+
     const [checked, setChecked] = useState<boolean>(false)
 
     // Filtre l'historique en fonction de la recherche
@@ -181,7 +174,16 @@ export default function ConversationPage() {
                     }, { signal });
             
                     setAnswer(res.data.answer);
-                    if (selectedConversationId) saveConversation(selectedConversationId, res.data.answer, res.data.tokens_used, res.data.duration, question)
+                    if (selectedConversationId) {
+                        saveConversation(
+                            selectedConversationId,
+                            res.data.answer,
+                            res.data.tokens_used,
+                            res.data.duration,
+                            question,
+                            file && checked ? file.name : undefined
+                        );
+                    }
                     setPendingQuestion(null);
                     setRunningConvId(null)
                 } catch (err) {
@@ -209,7 +211,16 @@ export default function ConversationPage() {
                 }, { signal });
         
                 setAnswer(res.data.answer);
-                if (selectedConversationId) saveConversation(selectedConversationId, res.data.answer, res.data.tokens_used, res.data.duration, question)
+                if (selectedConversationId) {
+                    saveConversation(
+                        selectedConversationId,
+                        res.data.answer,
+                        res.data.tokens_used,
+                        res.data.duration,
+                        question,
+                        file && checked ? file.name : undefined
+                    );
+                }
                 setPendingQuestion(null);
                 setRunningConvId(null)
             } catch (err) {
@@ -312,7 +323,7 @@ export default function ConversationPage() {
                 style={{gap: "10px", scrollbarColor: "#80808057 transparent", paddingBottom: inputHeight}}
             >
                 {paginatedHistory.slice().map((entry, index) => (
-                    <HistoryCard key={index} index={index} question={highlightMatch(entry.question, search)} answer={highlightMatch(entry.answer, search)} tokens={entry.tokens} duration={entry.duration} />
+                    <HistoryCard key={index} index={index} question={highlightMatch(entry.question, search)} answer={highlightMatch(entry.answer, search)} tokens={entry.tokens} duration={entry.duration} file={entry.file} />
                 ))}
 
                 {runningConvId === selectedConversationId && pendingQuestion && (
