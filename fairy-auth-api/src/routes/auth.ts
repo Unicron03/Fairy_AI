@@ -262,7 +262,7 @@ router.delete("/conversations/:id", async (req, res) => {
 // POST /api/conversations/:id/messages
 router.post('/conversations/:id/messages', async (req, res) => {
 	const { id: conversationId } = req.params;
-	const { question, answer, tokens, duration, file } = req.body;
+	const { question, answer, tokens, duration, fileUsed } = req.body;
 	
 	try {
 		console.log("Création d'un message pour la conversation :", conversationId)
@@ -283,7 +283,7 @@ router.post('/conversations/:id/messages', async (req, res) => {
 				answer,
 				tokens,
 				duration,
-				file
+				fileUsed
 			}
 		});
 		

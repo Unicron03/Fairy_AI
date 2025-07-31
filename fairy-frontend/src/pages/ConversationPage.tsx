@@ -104,6 +104,7 @@ export default function ConversationPage() {
                 const res = await fetch(`http://localhost:3001/api/conversations/${selectedConversationId}`)
                 const data = await res.json()
                 setMessages(data.messages)
+                console.log(messages)
             } catch (err) {
                 console.error("Erreur lors du chargement des messages :", err)
             }
@@ -323,7 +324,7 @@ export default function ConversationPage() {
                 style={{gap: "10px", scrollbarColor: "#80808057 transparent", paddingBottom: inputHeight}}
             >
                 {paginatedHistory.slice().map((entry, index) => (
-                    <HistoryCard key={index} index={index} question={highlightMatch(entry.question, search)} answer={highlightMatch(entry.answer, search)} tokens={entry.tokens} duration={entry.duration} file={entry.file} />
+                    <HistoryCard key={index} index={index} question={highlightMatch(entry.question, search)} answer={highlightMatch(entry.answer, search)} tokens={entry.tokens} duration={entry.duration} file={entry.fileUsed} />
                 ))}
 
                 {runningConvId === selectedConversationId && pendingQuestion && (

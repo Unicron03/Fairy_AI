@@ -62,7 +62,7 @@ const HistoryCard: React.FC<HistoryCardProps> = ({ index, question, answer, toke
                 style={{zIndex: index == 0 ? 50 : 0}}
             >
                 <span className="whitespace-pre-wrap" style={{paddingBlock: "28px"}}>{question}</span>
-                {file && <i className="absolute -bottom-8 left-0 text-[#a1a1a1]" style={{fontSize: "small"}}>Fichier utilisé : {file}</i>}
+                {file && <i className="absolute -bottom-7 left-0 w-[85%] truncate text-[#a1a1a1]" style={{fontSize: "small"}} title={file}>Fichier utilisé : {file}</i>}
                 <button
                     onClick={() => copyText(flattenText(question), true)}
                     className="absolute -bottom-8 right-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
