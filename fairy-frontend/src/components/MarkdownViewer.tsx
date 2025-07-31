@@ -10,9 +10,15 @@ export default function MarkdownViewer({ filePath }: { filePath: string }) {
 
     useEffect(() => {
         fetch(filePath)
-            .then((res) => res.text())
-            .then((text) => setContent(text))
-            .catch((err) => console.error("Erreur lors du chargement du .md :", err));
+            .then((res) => {
+                if (!res.ok) throw new Error(`Fichier introuvable : ${filePath}`);
+                return res.text();
+            })
+            .then(setContent)
+            .catch((err) => {
+                console.error("Erreur lors du chargement du .md :", err);
+                setContent(`# Erreur\nImpossible de charger le fichier Markdown.`);
+            });
     }, [filePath]);
 
     return (

@@ -46,7 +46,7 @@ export default function InfoPanel() {
                                 <AccordionTrigger>Voir la documentation</AccordionTrigger>
                                 <AccordionContent className="max-h-[50vh] overflow-y-auto">
                                     <div className="flex flex-col gap-4">
-                                        <MarkdownViewer filePath="documentations/app.md" />
+                                        <MarkdownViewer filePath="/documentations/app.md" />
                                         <p>Contributeurs au projet FAIry :</p>
                                         <div className="*:data-[slot=avatar]:ring-background flex -space-x-3 *:data-[slot=avatar]:ring-3 *:data-[slot=avatar]:grayscale">
                                             <Avatar onClick={() => window.open("https://github.com/unicron03")} className="cursor-pointer" title="Evdp">

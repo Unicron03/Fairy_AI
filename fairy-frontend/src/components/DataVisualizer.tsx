@@ -75,16 +75,18 @@ export default function DataVisualizer({ file }: { file: File | null }) {
                 </button>
             </DialogTrigger>
             <DialogContent
-                className="bg-[#f5f5f5] dark:bg-[#27272a] max-w-6xl max-h-3xl"
+                className="bg-[#f5f5f5] dark:bg-[#27272a] max-w-6xl w-fit max-h-[100%] h-fit"
                 style={{ scrollbarColor: "#80808057 transparent" }}
             >
                 <DialogHeader>
                     <DialogTitle>Données importées</DialogTitle>
                     <DialogDescription>
                         Fichier : {file?.name || "Aucun fichier"}
+                        <br/><br/>
+                        <i className="text-[#a1a1a1]">Vous pouvez cliquer sur les entêtes des colonnes pour trier les données</i>
                     </DialogDescription>
                 </DialogHeader>
-                <div className="overflow-auto max-h-[60vh]">
+                <div className="overflow-auto min-w-fit max-h-[60vh]">
                     <table className="w-full table-auto border-collapse">
                         <thead className="bg-background dark:bg-[#27272a]">
                         <tr className="sticky top-0 z-10">

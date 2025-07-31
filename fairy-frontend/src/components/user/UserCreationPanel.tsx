@@ -56,7 +56,7 @@ export function UserCreationPanel() {
                 <Button className="hover:opacity-60 bg-black dark:bg-white text-white dark:text-black w-fit">Créer un nouvel utilisateur</Button>
             </DialogTrigger>
 
-            <DialogContent className="sm:max-w-[475px] h-fit bg-white dark:bg-black">
+            <DialogContent className="sm:max-w-[475px] h-fit bg-white dark:bg-black overflow-y-auto" style={{ scrollbarColor: "#80808057 transparent" }}>
                 <form ref={formRef} onSubmit={handleSubmit}>
                     <DialogHeader>
                         <DialogTitle>Création d'utilisateur</DialogTitle>
