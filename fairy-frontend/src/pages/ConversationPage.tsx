@@ -351,7 +351,7 @@ export default function ConversationPage() {
                         }}
                     >
                         <div className="flex gap-4 divAttachSend">
-                            <InfoPanel/>
+                            <InfoPanel />
                             <ExportDialog history={messages} author={user?.name} />
                         </div>
                         

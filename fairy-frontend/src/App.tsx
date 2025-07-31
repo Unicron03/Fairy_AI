@@ -95,7 +95,7 @@ function Layout() {
 
 export default function App() {
 	return (
-		<SidebarProvider defaultOpen={localStorage.getItem("sidebar-state") === "open"}>
+		<SidebarProvider title="Plier/Déplier le menu" defaultOpen={localStorage.getItem("sidebar-state") === "open"}>
 			<Router>
 				<UserProvider>
 				<ConversationProvider>

@@ -16,7 +16,7 @@ export default function Home() {
             {/* Header collé en haut */}
             <header className="sticky top-0 z-30 flex gap-4 justify-end p-[15px] pb-0 bg-white dark:bg-[#09090b]">
                 <ThemeToggle />
-                <InfoPanel />
+                <InfoPanel onlyDoc={true} />
             </header>
 
             {/* Contenu principal centré */}
