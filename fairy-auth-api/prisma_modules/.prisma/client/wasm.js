@@ -143,8 +143,8 @@ exports.Prisma.MessageScalarFieldEnum = {
   answer: 'answer',
   tokens: 'tokens',
   duration: 'duration',
-  fileUsed: 'fileUsed',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  fileUsed: 'fileUsed'
 };
 
 exports.Prisma.SortOrder = {

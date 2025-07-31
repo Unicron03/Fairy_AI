@@ -39,6 +39,6 @@ model Message {
   answer         String
   tokens         Int
   duration       Int
-  fileUsed       String?
   createdAt      DateTime     @default(now())
+  fileUsed       String?
 }

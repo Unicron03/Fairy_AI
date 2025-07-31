@@ -3048,8 +3048,8 @@ export namespace Prisma {
     answer: string | null
     tokens: number | null
     duration: number | null
-    fileUsed: string | null
     createdAt: Date | null
+    fileUsed: string | null
   }
 
   export type MessageMaxAggregateOutputType = {
@@ -3059,8 +3059,8 @@ export namespace Prisma {
     answer: string | null
     tokens: number | null
     duration: number | null
-    fileUsed: string | null
     createdAt: Date | null
+    fileUsed: string | null
   }
 
   export type MessageCountAggregateOutputType = {
@@ -3070,8 +3070,8 @@ export namespace Prisma {
     answer: number
     tokens: number
     duration: number
-    fileUsed: number
     createdAt: number
+    fileUsed: number
     _all: number
   }
 
@@ -3093,8 +3093,8 @@ export namespace Prisma {
     answer?: true
     tokens?: true
     duration?: true
-    fileUsed?: true
     createdAt?: true
+    fileUsed?: true
   }
 
   export type MessageMaxAggregateInputType = {
@@ -3104,8 +3104,8 @@ export namespace Prisma {
     answer?: true
     tokens?: true
     duration?: true
-    fileUsed?: true
     createdAt?: true
+    fileUsed?: true
   }
 
   export type MessageCountAggregateInputType = {
@@ -3115,8 +3115,8 @@ export namespace Prisma {
     answer?: true
     tokens?: true
     duration?: true
-    fileUsed?: true
     createdAt?: true
+    fileUsed?: true
     _all?: true
   }
 
@@ -3213,8 +3213,8 @@ export namespace Prisma {
     answer: string
     tokens: number
     duration: number
-    fileUsed: string | null
     createdAt: Date
+    fileUsed: string | null
     _count: MessageCountAggregateOutputType | null
     _avg: MessageAvgAggregateOutputType | null
     _sum: MessageSumAggregateOutputType | null
@@ -3243,8 +3243,8 @@ export namespace Prisma {
     answer?: boolean
     tokens?: boolean
     duration?: boolean
-    fileUsed?: boolean
     createdAt?: boolean
+    fileUsed?: boolean
     conversation?: boolean | ConversationDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["message"]>
 
@@ -3257,11 +3257,11 @@ export namespace Prisma {
     answer?: boolean
     tokens?: boolean
     duration?: boolean
-    fileUsed?: boolean
     createdAt?: boolean
+    fileUsed?: boolean
   }
 
-  export type MessageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "conversationId" | "question" | "answer" | "tokens" | "duration" | "fileUsed" | "createdAt", ExtArgs["result"]["message"]>
+  export type MessageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "conversationId" | "question" | "answer" | "tokens" | "duration" | "createdAt" | "fileUsed", ExtArgs["result"]["message"]>
   export type MessageInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     conversation?: boolean | ConversationDefaultArgs<ExtArgs>
   }
@@ -3278,8 +3278,8 @@ export namespace Prisma {
       answer: string
       tokens: number
       duration: number
-      fileUsed: string | null
       createdAt: Date
+      fileUsed: string | null
     }, ExtArgs["result"]["message"]>
     composites: {}
   }
@@ -3656,8 +3656,8 @@ export namespace Prisma {
     readonly answer: FieldRef<"Message", 'String'>
     readonly tokens: FieldRef<"Message", 'Int'>
     readonly duration: FieldRef<"Message", 'Int'>
-    readonly fileUsed: FieldRef<"Message", 'String'>
     readonly createdAt: FieldRef<"Message", 'DateTime'>
+    readonly fileUsed: FieldRef<"Message", 'String'>
   }
     
 
@@ -4062,8 +4062,8 @@ export namespace Prisma {
     answer: 'answer',
     tokens: 'tokens',
     duration: 'duration',
-    fileUsed: 'fileUsed',
-    createdAt: 'createdAt'
+    createdAt: 'createdAt',
+    fileUsed: 'fileUsed'
   };
 
   export type MessageScalarFieldEnum = (typeof MessageScalarFieldEnum)[keyof typeof MessageScalarFieldEnum]
@@ -4283,8 +4283,8 @@ export namespace Prisma {
     answer?: StringFilter<"Message"> | string
     tokens?: IntFilter<"Message"> | number
     duration?: IntFilter<"Message"> | number
-    fileUsed?: StringNullableFilter<"Message"> | string | null
     createdAt?: DateTimeFilter<"Message"> | Date | string
+    fileUsed?: StringNullableFilter<"Message"> | string | null
     conversation?: XOR<ConversationScalarRelationFilter, ConversationWhereInput>
   }
 
@@ -4295,8 +4295,8 @@ export namespace Prisma {
     answer?: SortOrder
     tokens?: SortOrder
     duration?: SortOrder
-    fileUsed?: SortOrderInput | SortOrder
     createdAt?: SortOrder
+    fileUsed?: SortOrderInput | SortOrder
     conversation?: ConversationOrderByWithRelationInput
     _relevance?: MessageOrderByRelevanceInput
   }
@@ -4311,8 +4311,8 @@ export namespace Prisma {
     answer?: StringFilter<"Message"> | string
     tokens?: IntFilter<"Message"> | number
     duration?: IntFilter<"Message"> | number
-    fileUsed?: StringNullableFilter<"Message"> | string | null
     createdAt?: DateTimeFilter<"Message"> | Date | string
+    fileUsed?: StringNullableFilter<"Message"> | string | null
     conversation?: XOR<ConversationScalarRelationFilter, ConversationWhereInput>
   }, "id">
 
@@ -4323,8 +4323,8 @@ export namespace Prisma {
     answer?: SortOrder
     tokens?: SortOrder
     duration?: SortOrder
-    fileUsed?: SortOrderInput | SortOrder
     createdAt?: SortOrder
+    fileUsed?: SortOrderInput | SortOrder
     _count?: MessageCountOrderByAggregateInput
     _avg?: MessageAvgOrderByAggregateInput
     _max?: MessageMaxOrderByAggregateInput
@@ -4342,8 +4342,8 @@ export namespace Prisma {
     answer?: StringWithAggregatesFilter<"Message"> | string
     tokens?: IntWithAggregatesFilter<"Message"> | number
     duration?: IntWithAggregatesFilter<"Message"> | number
-    fileUsed?: StringNullableWithAggregatesFilter<"Message"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Message"> | Date | string
+    fileUsed?: StringNullableWithAggregatesFilter<"Message"> | string | null
   }
 
   export type UserCreateInput = {
@@ -4471,8 +4471,8 @@ export namespace Prisma {
     answer: string
     tokens: number
     duration: number
-    fileUsed?: string | null
     createdAt?: Date | string
+    fileUsed?: string | null
     conversation: ConversationCreateNestedOneWithoutMessagesInput
   }
 
@@ -4483,8 +4483,8 @@ export namespace Prisma {
     answer: string
     tokens: number
     duration: number
-    fileUsed?: string | null
     createdAt?: Date | string
+    fileUsed?: string | null
   }
 
   export type MessageUpdateInput = {
@@ -4493,8 +4493,8 @@ export namespace Prisma {
     answer?: StringFieldUpdateOperationsInput | string
     tokens?: IntFieldUpdateOperationsInput | number
     duration?: IntFieldUpdateOperationsInput | number
-    fileUsed?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fileUsed?: NullableStringFieldUpdateOperationsInput | string | null
     conversation?: ConversationUpdateOneRequiredWithoutMessagesNestedInput
   }
 
@@ -4505,8 +4505,8 @@ export namespace Prisma {
     answer?: StringFieldUpdateOperationsInput | string
     tokens?: IntFieldUpdateOperationsInput | number
     duration?: IntFieldUpdateOperationsInput | number
-    fileUsed?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fileUsed?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type MessageCreateManyInput = {
@@ -4516,8 +4516,8 @@ export namespace Prisma {
     answer: string
     tokens: number
     duration: number
-    fileUsed?: string | null
     createdAt?: Date | string
+    fileUsed?: string | null
   }
 
   export type MessageUpdateManyMutationInput = {
@@ -4526,8 +4526,8 @@ export namespace Prisma {
     answer?: StringFieldUpdateOperationsInput | string
     tokens?: IntFieldUpdateOperationsInput | number
     duration?: IntFieldUpdateOperationsInput | number
-    fileUsed?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fileUsed?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type MessageUncheckedUpdateManyInput = {
@@ -4537,8 +4537,8 @@ export namespace Prisma {
     answer?: StringFieldUpdateOperationsInput | string
     tokens?: IntFieldUpdateOperationsInput | number
     duration?: IntFieldUpdateOperationsInput | number
-    fileUsed?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fileUsed?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type StringFilter<$PrismaModel = never> = {
@@ -4768,8 +4768,8 @@ export namespace Prisma {
     answer?: SortOrder
     tokens?: SortOrder
     duration?: SortOrder
-    fileUsed?: SortOrder
     createdAt?: SortOrder
+    fileUsed?: SortOrder
   }
 
   export type MessageAvgOrderByAggregateInput = {
@@ -4784,8 +4784,8 @@ export namespace Prisma {
     answer?: SortOrder
     tokens?: SortOrder
     duration?: SortOrder
-    fileUsed?: SortOrder
     createdAt?: SortOrder
+    fileUsed?: SortOrder
   }
 
   export type MessageMinOrderByAggregateInput = {
@@ -4795,8 +4795,8 @@ export namespace Prisma {
     answer?: SortOrder
     tokens?: SortOrder
     duration?: SortOrder
-    fileUsed?: SortOrder
     createdAt?: SortOrder
+    fileUsed?: SortOrder
   }
 
   export type MessageSumOrderByAggregateInput = {
@@ -5192,8 +5192,8 @@ export namespace Prisma {
     answer: string
     tokens: number
     duration: number
-    fileUsed?: string | null
     createdAt?: Date | string
+    fileUsed?: string | null
   }
 
   export type MessageUncheckedCreateWithoutConversationInput = {
@@ -5202,8 +5202,8 @@ export namespace Prisma {
     answer: string
     tokens: number
     duration: number
-    fileUsed?: string | null
     createdAt?: Date | string
+    fileUsed?: string | null
   }
 
   export type MessageCreateOrConnectWithoutConversationInput = {
@@ -5271,8 +5271,8 @@ export namespace Prisma {
     answer?: StringFilter<"Message"> | string
     tokens?: IntFilter<"Message"> | number
     duration?: IntFilter<"Message"> | number
-    fileUsed?: StringNullableFilter<"Message"> | string | null
     createdAt?: DateTimeFilter<"Message"> | Date | string
+    fileUsed?: StringNullableFilter<"Message"> | string | null
   }
 
   export type ConversationCreateWithoutMessagesInput = {
@@ -5351,8 +5351,8 @@ export namespace Prisma {
     answer: string
     tokens: number
     duration: number
-    fileUsed?: string | null
     createdAt?: Date | string
+    fileUsed?: string | null
   }
 
   export type MessageUpdateWithoutConversationInput = {
@@ -5361,8 +5361,8 @@ export namespace Prisma {
     answer?: StringFieldUpdateOperationsInput | string
     tokens?: IntFieldUpdateOperationsInput | number
     duration?: IntFieldUpdateOperationsInput | number
-    fileUsed?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fileUsed?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type MessageUncheckedUpdateWithoutConversationInput = {
@@ -5371,8 +5371,8 @@ export namespace Prisma {
     answer?: StringFieldUpdateOperationsInput | string
     tokens?: IntFieldUpdateOperationsInput | number
     duration?: IntFieldUpdateOperationsInput | number
-    fileUsed?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fileUsed?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type MessageUncheckedUpdateManyWithoutConversationInput = {
@@ -5381,8 +5381,8 @@ export namespace Prisma {
     answer?: StringFieldUpdateOperationsInput | string
     tokens?: IntFieldUpdateOperationsInput | number
     duration?: IntFieldUpdateOperationsInput | number
-    fileUsed?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fileUsed?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
 
