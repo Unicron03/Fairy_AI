@@ -143,6 +143,7 @@ exports.Prisma.MessageScalarFieldEnum = {
   answer: 'answer',
   tokens: 'tokens',
   duration: 'duration',
+  fileUsed: 'fileUsed',
   createdAt: 'createdAt'
 };
 
@@ -173,7 +174,8 @@ exports.Prisma.MessageOrderByRelevanceFieldEnum = {
   id: 'id',
   conversationId: 'conversationId',
   question: 'question',
-  answer: 'answer'
+  answer: 'answer',
+  fileUsed: 'fileUsed'
 };
 exports.Role = exports.$Enums.Role = {
   USER: 'USER',

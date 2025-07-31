@@ -3048,6 +3048,7 @@ export namespace Prisma {
     answer: string | null
     tokens: number | null
     duration: number | null
+    fileUsed: string | null
     createdAt: Date | null
   }
 
@@ -3058,6 +3059,7 @@ export namespace Prisma {
     answer: string | null
     tokens: number | null
     duration: number | null
+    fileUsed: string | null
     createdAt: Date | null
   }
 
@@ -3068,6 +3070,7 @@ export namespace Prisma {
     answer: number
     tokens: number
     duration: number
+    fileUsed: number
     createdAt: number
     _all: number
   }
@@ -3090,6 +3093,7 @@ export namespace Prisma {
     answer?: true
     tokens?: true
     duration?: true
+    fileUsed?: true
     createdAt?: true
   }
 
@@ -3100,6 +3104,7 @@ export namespace Prisma {
     answer?: true
     tokens?: true
     duration?: true
+    fileUsed?: true
     createdAt?: true
   }
 
@@ -3110,6 +3115,7 @@ export namespace Prisma {
     answer?: true
     tokens?: true
     duration?: true
+    fileUsed?: true
     createdAt?: true
     _all?: true
   }
@@ -3207,6 +3213,7 @@ export namespace Prisma {
     answer: string
     tokens: number
     duration: number
+    fileUsed: string | null
     createdAt: Date
     _count: MessageCountAggregateOutputType | null
     _avg: MessageAvgAggregateOutputType | null
@@ -3236,6 +3243,7 @@ export namespace Prisma {
     answer?: boolean
     tokens?: boolean
     duration?: boolean
+    fileUsed?: boolean
     createdAt?: boolean
     conversation?: boolean | ConversationDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["message"]>
@@ -3249,10 +3257,11 @@ export namespace Prisma {
     answer?: boolean
     tokens?: boolean
     duration?: boolean
+    fileUsed?: boolean
     createdAt?: boolean
   }
 
-  export type MessageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "conversationId" | "question" | "answer" | "tokens" | "duration" | "createdAt", ExtArgs["result"]["message"]>
+  export type MessageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "conversationId" | "question" | "answer" | "tokens" | "duration" | "fileUsed" | "createdAt", ExtArgs["result"]["message"]>
   export type MessageInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     conversation?: boolean | ConversationDefaultArgs<ExtArgs>
   }
@@ -3269,6 +3278,7 @@ export namespace Prisma {
       answer: string
       tokens: number
       duration: number
+      fileUsed: string | null
       createdAt: Date
     }, ExtArgs["result"]["message"]>
     composites: {}
@@ -3646,6 +3656,7 @@ export namespace Prisma {
     readonly answer: FieldRef<"Message", 'String'>
     readonly tokens: FieldRef<"Message", 'Int'>
     readonly duration: FieldRef<"Message", 'Int'>
+    readonly fileUsed: FieldRef<"Message", 'String'>
     readonly createdAt: FieldRef<"Message", 'DateTime'>
   }
     
@@ -4051,6 +4062,7 @@ export namespace Prisma {
     answer: 'answer',
     tokens: 'tokens',
     duration: 'duration',
+    fileUsed: 'fileUsed',
     createdAt: 'createdAt'
   };
 
@@ -4096,7 +4108,8 @@ export namespace Prisma {
     id: 'id',
     conversationId: 'conversationId',
     question: 'question',
-    answer: 'answer'
+    answer: 'answer',
+    fileUsed: 'fileUsed'
   };
 
   export type MessageOrderByRelevanceFieldEnum = (typeof MessageOrderByRelevanceFieldEnum)[keyof typeof MessageOrderByRelevanceFieldEnum]
@@ -4270,6 +4283,7 @@ export namespace Prisma {
     answer?: StringFilter<"Message"> | string
     tokens?: IntFilter<"Message"> | number
     duration?: IntFilter<"Message"> | number
+    fileUsed?: StringNullableFilter<"Message"> | string | null
     createdAt?: DateTimeFilter<"Message"> | Date | string
     conversation?: XOR<ConversationScalarRelationFilter, ConversationWhereInput>
   }
@@ -4281,6 +4295,7 @@ export namespace Prisma {
     answer?: SortOrder
     tokens?: SortOrder
     duration?: SortOrder
+    fileUsed?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     conversation?: ConversationOrderByWithRelationInput
     _relevance?: MessageOrderByRelevanceInput
@@ -4296,6 +4311,7 @@ export namespace Prisma {
     answer?: StringFilter<"Message"> | string
     tokens?: IntFilter<"Message"> | number
     duration?: IntFilter<"Message"> | number
+    fileUsed?: StringNullableFilter<"Message"> | string | null
     createdAt?: DateTimeFilter<"Message"> | Date | string
     conversation?: XOR<ConversationScalarRelationFilter, ConversationWhereInput>
   }, "id">
@@ -4307,6 +4323,7 @@ export namespace Prisma {
     answer?: SortOrder
     tokens?: SortOrder
     duration?: SortOrder
+    fileUsed?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     _count?: MessageCountOrderByAggregateInput
     _avg?: MessageAvgOrderByAggregateInput
@@ -4325,6 +4342,7 @@ export namespace Prisma {
     answer?: StringWithAggregatesFilter<"Message"> | string
     tokens?: IntWithAggregatesFilter<"Message"> | number
     duration?: IntWithAggregatesFilter<"Message"> | number
+    fileUsed?: StringNullableWithAggregatesFilter<"Message"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Message"> | Date | string
   }
 
@@ -4453,6 +4471,7 @@ export namespace Prisma {
     answer: string
     tokens: number
     duration: number
+    fileUsed?: string | null
     createdAt?: Date | string
     conversation: ConversationCreateNestedOneWithoutMessagesInput
   }
@@ -4464,6 +4483,7 @@ export namespace Prisma {
     answer: string
     tokens: number
     duration: number
+    fileUsed?: string | null
     createdAt?: Date | string
   }
 
@@ -4473,6 +4493,7 @@ export namespace Prisma {
     answer?: StringFieldUpdateOperationsInput | string
     tokens?: IntFieldUpdateOperationsInput | number
     duration?: IntFieldUpdateOperationsInput | number
+    fileUsed?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     conversation?: ConversationUpdateOneRequiredWithoutMessagesNestedInput
   }
@@ -4484,6 +4505,7 @@ export namespace Prisma {
     answer?: StringFieldUpdateOperationsInput | string
     tokens?: IntFieldUpdateOperationsInput | number
     duration?: IntFieldUpdateOperationsInput | number
+    fileUsed?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -4494,6 +4516,7 @@ export namespace Prisma {
     answer: string
     tokens: number
     duration: number
+    fileUsed?: string | null
     createdAt?: Date | string
   }
 
@@ -4503,6 +4526,7 @@ export namespace Prisma {
     answer?: StringFieldUpdateOperationsInput | string
     tokens?: IntFieldUpdateOperationsInput | number
     duration?: IntFieldUpdateOperationsInput | number
+    fileUsed?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -4513,6 +4537,7 @@ export namespace Prisma {
     answer?: StringFieldUpdateOperationsInput | string
     tokens?: IntFieldUpdateOperationsInput | number
     duration?: IntFieldUpdateOperationsInput | number
+    fileUsed?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -4743,6 +4768,7 @@ export namespace Prisma {
     answer?: SortOrder
     tokens?: SortOrder
     duration?: SortOrder
+    fileUsed?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -4758,6 +4784,7 @@ export namespace Prisma {
     answer?: SortOrder
     tokens?: SortOrder
     duration?: SortOrder
+    fileUsed?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -4768,6 +4795,7 @@ export namespace Prisma {
     answer?: SortOrder
     tokens?: SortOrder
     duration?: SortOrder
+    fileUsed?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -5164,6 +5192,7 @@ export namespace Prisma {
     answer: string
     tokens: number
     duration: number
+    fileUsed?: string | null
     createdAt?: Date | string
   }
 
@@ -5173,6 +5202,7 @@ export namespace Prisma {
     answer: string
     tokens: number
     duration: number
+    fileUsed?: string | null
     createdAt?: Date | string
   }
 
@@ -5241,6 +5271,7 @@ export namespace Prisma {
     answer?: StringFilter<"Message"> | string
     tokens?: IntFilter<"Message"> | number
     duration?: IntFilter<"Message"> | number
+    fileUsed?: StringNullableFilter<"Message"> | string | null
     createdAt?: DateTimeFilter<"Message"> | Date | string
   }
 
@@ -5320,6 +5351,7 @@ export namespace Prisma {
     answer: string
     tokens: number
     duration: number
+    fileUsed?: string | null
     createdAt?: Date | string
   }
 
@@ -5329,6 +5361,7 @@ export namespace Prisma {
     answer?: StringFieldUpdateOperationsInput | string
     tokens?: IntFieldUpdateOperationsInput | number
     duration?: IntFieldUpdateOperationsInput | number
+    fileUsed?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -5338,6 +5371,7 @@ export namespace Prisma {
     answer?: StringFieldUpdateOperationsInput | string
     tokens?: IntFieldUpdateOperationsInput | number
     duration?: IntFieldUpdateOperationsInput | number
+    fileUsed?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -5347,6 +5381,7 @@ export namespace Prisma {
     answer?: StringFieldUpdateOperationsInput | string
     tokens?: IntFieldUpdateOperationsInput | number
     duration?: IntFieldUpdateOperationsInput | number
+    fileUsed?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
