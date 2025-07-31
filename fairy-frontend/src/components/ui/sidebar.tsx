@@ -260,6 +260,7 @@ function SidebarTrigger({
 
   return (
     <Button
+      title="Plier/Déplier le menu"
       data-sidebar="trigger"
       data-slot="sidebar-trigger"
       variant="ghost"
