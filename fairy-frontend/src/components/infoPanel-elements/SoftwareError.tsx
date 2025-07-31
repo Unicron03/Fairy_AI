@@ -51,7 +51,7 @@ export default function SoftwareError() {
 		}
 
 		try {
-			const response = await fetch("http://localhost:3001/api/email/report-error", {
+			const response = await fetch("http://localhost:3001/api/email/report-soft-error", {
 				method: "POST",
 				body: formData,
 			});

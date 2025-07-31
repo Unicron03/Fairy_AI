@@ -79,7 +79,7 @@ export default function DataSheetError({ open, setOpen }: openProps) {
 			}
 
 			try {
-				const response = await fetch("http://localhost:3001/api/email/report-error", {
+				const response = await fetch("http://localhost:3001/api/email/report-sheet-error", {
 					method: "POST",
 					body: formData,
 				});

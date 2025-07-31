@@ -40,11 +40,11 @@ export default function InfoPanel() {
                 <DialogHeader>
                     <DialogTitle>Infos & Signalements</DialogTitle>
                     <DialogDescription>
-                        <p>Ici vous pouvez accéder à la documentation du logiciel <strong>ET</strong> effectuer des signalements sur des éléments possiblement faux</p>
+                        <p className="text-[#a1a1a1]">Ici vous pouvez accéder à la documentation du logiciel <strong>ET</strong> effectuer des signalements sur des éléments possiblement faux</p>
                         <Accordion type="single" collapsible>
                             <AccordionItem value="item-1">
                                 <AccordionTrigger>Voir la documentation</AccordionTrigger>
-                               <AccordionContent className="max-h-[50vh] overflow-y-auto">
+                                <AccordionContent className="max-h-[50vh] overflow-y-auto">
                                     <div className="flex flex-col gap-4">
                                         <MarkdownViewer filePath="documentations/app.md" />
                                         <p>Contributeurs au projet FAIry :</p>
@@ -59,13 +59,13 @@ export default function InfoPanel() {
                             </AccordionItem>
                             <AccordionItem value="item-2">
                                 <AccordionTrigger>Signaler un problème dans une feuille de données</AccordionTrigger>
-                                <AccordionContent>
+                                <AccordionContent className="max-h-[35vh] overflow-y-auto">
                                     <DataSheetError open={open} setOpen={setOpen} />
                                 </AccordionContent>
                             </AccordionItem>
                             <AccordionItem value="item-3">
                                 <AccordionTrigger>Signaler un problème dans le logiciel</AccordionTrigger>
-                                <AccordionContent>
+                                <AccordionContent className="max-h-[32vh] overflow-y-auto">
                                     <SoftwareError />
                                 </AccordionContent>
                             </AccordionItem>

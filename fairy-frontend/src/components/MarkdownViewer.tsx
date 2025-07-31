@@ -16,7 +16,7 @@ export default function MarkdownViewer({ filePath }: { filePath: string }) {
     }, [filePath]);
 
     return (
-        <div className="prose dark:prose-invert max-w-[inherit] max-h-[inherit] overflow-y-auto p-4">
+        <div className="prose dark:prose-invert max-w-[inherit] max-h-[inherit] overflow-y-auto" style={{paddingInline: "0.6rem"}}>
             <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
                 rehypePlugins={[rehypeHighlight, rehypeRaw]}

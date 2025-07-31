@@ -1,44 +1,44 @@
 generator client {
-  provider = "prisma-client-js"
+	provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+	provider = "mysql"
+	url      = env("DATABASE_URL")
 }
 
 enum Role {
-  USER
-  ADMIN
+	USER
+	ADMIN
 }
 
 model User {
-  id        String         @id @default(uuid())
-  name      String         @unique
-  email     String         @unique
-  password  String
-  role      Role           @default(USER)
-  createdAt DateTime       @default(now())
-  conversations Conversation[]
+	id        String         @id @default(uuid())
+	name      String         @unique
+	email     String         @unique
+	password  String
+	role      Role           @default(USER)
+	createdAt DateTime       @default(now())
+	conversations Conversation[]
 }
 
 model Conversation {
-  id        String     @id @default(uuid())
-  userId    String
-  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  messages  Message[]  // nouveau lien
-  convName  String?
-  createdAt DateTime   @default(now())
+	id        String     @id @default(uuid())
+	userId    String
+	user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+	messages  Message[]  // nouveau lien
+	convName  String?
+	createdAt DateTime   @default(now())
 }
 
 model Message {
-  id              String        @id @default(uuid())
-  conversationId  String
-  conversation    Conversation  @relation(fields: [conversationId], references: [id], onDelete: Cascade)
-  question        String
-  answer          String
-  tokens          Int
-  duration        Int
-  createdAt       DateTime      @default(now())
-  fileUsed        String?
+	id              String        @id @default(uuid())
+	conversationId  String
+	conversation    Conversation  @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+	question        String
+	answer          String
+	tokens          Int
+	duration        Int
+	createdAt       DateTime      @default(now())
+	fileUsed        String?
 }
