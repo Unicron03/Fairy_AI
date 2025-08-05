@@ -20,16 +20,19 @@ InfoAfterFile=C:\Users\evandepoele\OneDrive - TéHA\Documents\IA\fairy-install\p
 OutputBaseFilename=install-requirements
 Compression=lzma
 SolidCompression=yes
+PrivilegesRequired=admin
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "french"; MessagesFile: "compiler:Languages\French.isl"
 
 [Files]
-Source: "C:\Users\evandepoele\OneDrive - TéHA\Documents\IA\fairy-install\node-v22.18.0-x64.msi"; DestDir: "{tmp}"; Flags: deleteafterinstall
-Source: "C:\Users\evandepoele\OneDrive - TéHA\Documents\IA\fairy-install\enable-scripts.ps1"; DestDir: "{tmp}"; Flags: deleteafterinstall
+Source: "C:\Users\evandepoele\Downloads\Fairy_AI-main\Fairy_AI-main\fairy-install\node-v22.18.0-x64.msi"; DestDir: "{tmp}"; Flags: deleteafterinstall
+Source: "C:\Users\evandepoele\Downloads\Fairy_AI-main\Fairy_AI-main\fairy-install\enable-scripts.ps1"; DestDir: "{tmp}"; Flags: deleteafterinstall
+Source: "C:\Users\evandepoele\Downloads\Fairy_AI-main\Fairy_AI-main\fairy-ai-api\setup.ps1"; DestDir: "{tmp}"; Flags: deleteafterinstall
 
 [Run]
 Filename: "msiexec.exe"; Parameters: "/i ""{tmp}\node-v22.18.0-x64.msi"" /quiet /norestart"; StatusMsg: "Installation de Node.js..."; Flags: runhidden
 Filename: "powershell.exe"; Parameters: "-ExecutionPolicy Bypass -File ""{tmp}\enable-scripts.ps1"""; StatusMsg: "Activation des scripts PowerShell..."; Flags: runhidden
+Filename: "powershell.exe"; Parameters: "-ExecutionPolicy Bypass -File ""{tmp}\setup.ps1"""; StatusMsg: "Configuration de l'environnement Python..."; Flags: runhidden
 
