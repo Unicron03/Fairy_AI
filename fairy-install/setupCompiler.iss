@@ -20,7 +20,6 @@ InfoAfterFile=C:\Users\evandepoele\OneDrive - TéHA\Documents\IA\fairy-install\p
 OutputBaseFilename=install-requirements
 Compression=lzma
 SolidCompression=yes
-PrivilegesRequired=admin
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
