@@ -29,9 +29,11 @@ Name: "french"; MessagesFile: "compiler:Languages\French.isl"
 Source: "C:\Users\evandepoele\Downloads\Fairy_AI-main\Fairy_AI-main\fairy-install\node-v22.18.0-x64.msi"; DestDir: "{tmp}"; Flags: deleteafterinstall
 Source: "C:\Users\evandepoele\Downloads\Fairy_AI-main\Fairy_AI-main\fairy-install\enable-scripts.ps1"; DestDir: "{tmp}"; Flags: deleteafterinstall
 Source: "C:\Users\evandepoele\Downloads\Fairy_AI-main\Fairy_AI-main\fairy-ai-api\setup.ps1"; DestDir: "{tmp}"; Flags: deleteafterinstall
+Source: "C:\Users\evandepoele\Downloads\Fairy_AI-main\Fairy_AI-main\fairy-install\python-3.11.0-amd64.exe"; DestDir: "{tmp}"; Flags: deleteafterinstall
 
 [Run]
 Filename: "msiexec.exe"; Parameters: "/i ""{tmp}\node-v22.18.0-x64.msi"" /quiet /norestart"; StatusMsg: "Installation de Node.js..."; Flags: runhidden
 Filename: "powershell.exe"; Parameters: "-ExecutionPolicy Bypass -File ""{tmp}\enable-scripts.ps1"""; StatusMsg: "Activation des scripts PowerShell..."; Flags: runhidden
+Filename: "{tmp}\python-3.11.0-amd64.exe"; Parameters: "InstallAllUsers=0 PrependPath=1 Include_test=0 TargetDir=""{userpf}\Python311"" /quiet InstallLauncherAllUsers=0"; StatusMsg: "Installation de Python 3.11.0..."; Flags: runhidden waituntilterminated
 Filename: "powershell.exe"; Parameters: "-ExecutionPolicy Bypass -File ""{tmp}\setup.ps1"""; StatusMsg: "Configuration de l'environnement Python..."; Flags: runhidden
 
