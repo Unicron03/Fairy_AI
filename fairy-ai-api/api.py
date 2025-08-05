@@ -9,7 +9,7 @@ import time
 import io
 
 # Authentification Hugging Face
-login("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")
+login("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")
 
 # Charger modèle et tokenizer
 model_name = "mistralai/Mistral-7B-Instruct-v0.3"
