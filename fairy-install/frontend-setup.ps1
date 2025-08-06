@@ -1,5 +1,5 @@
 # Aller dans le dossier du frontend
-Set-Location "C:\Users\evandepoele\Downloads\Fairy_AI-main\Fairy_AI-main\fairy-frontend"
+Set-Location "..\fairy-frontend"
 
 # Installer les dépendances Node.js
 Write-Host ">>> Installation des dépendances frontend..."
