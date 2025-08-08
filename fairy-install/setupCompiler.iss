@@ -30,7 +30,7 @@ Source: "C:\Users\evandepoele\Downloads\Fairy_AI-main\Fairy_AI-main\fairy-instal
 Source: "C:\Users\evandepoele\Downloads\Fairy_AI-main\Fairy_AI-main\fairy-install\enable-scripts.ps1"; DestDir: "{tmp}"; Flags: deleteafterinstall
 Source: "C:\Users\evandepoele\Downloads\Fairy_AI-main\Fairy_AI-main\fairy-ai-api\setup.ps1"; DestDir: "{tmp}"; Flags: deleteafterinstall
 Source: "C:\Users\evandepoele\Downloads\Fairy_AI-main\Fairy_AI-main\fairy-install\python-3.11.0-amd64.exe"; DestDir: "{tmp}"; Flags: deleteafterinstall
-Source: "C:\Users\evandepoele\Downloads\Fairy_AI-main\Fairy_AI-main\fairy-install\mysql.zip"; DestDir: "C:\temp"; Flags: ignoreversion
+Source: "C:\Users\evandepoele\Downloads\Fairy_AI-main\Fairy_AI-main\fairy-install\mysql.zip"; DestDir: "{tmp}"; DestName: "mysql.zip"; Flags: deleteafterinstall
 Source: "C:\Users\evandepoele\Downloads\Fairy_AI-main\Fairy_AI-main\fairy-install\install-mysql.ps1"; DestDir: "{tmp}"; Flags: deleteafterinstall
 Source: "C:\Users\evandepoele\Downloads\Fairy_AI-main\Fairy_AI-main\fairy-install\frontend-setup.ps1"; DestDir: "{tmp}"; Flags: deleteafterinstall 
 Source: "C:\Users\evandepoele\Downloads\Fairy_AI-main\Fairy_AI-main\fairy-install\auth-api-setup.ps1"; DestDir: "{tmp}"; Flags: deleteafterinstall

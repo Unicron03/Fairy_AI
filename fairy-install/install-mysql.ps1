@@ -1,28 +1,32 @@
-$mysqlZip = "C:\temp\mysql.zip"
+# Chemins
+$zipPath = "$env:TEMP\mysql.zip"
 $mysqlDir = "C:\MySQL"
-$unzipDir = "C:\temp\mysql-unzip"
+$unzipTemp = "$env:TEMP\mysql-unzip"
+
+Write-Host "Début de l'installation MySQL..."
 
 # Nettoyage
-Remove-Item -Recurse -Force "$unzipDir" -ErrorAction SilentlyContinue
-Remove-Item -Recurse -Force "$mysqlDir" -ErrorAction SilentlyContinue
+Write-Host "Nettoyage d'éventuels dossiers précédents..."
+Remove-Item -Recurse -Force $mysqlDir -ErrorAction SilentlyContinue
+Remove-Item -Recurse -Force $unzipTemp -ErrorAction SilentlyContinue
 
 # Extraction
-Expand-Archive -Path $mysqlZip -DestinationPath $unzipDir -Force
-$folder = Get-ChildItem $unzipDir | Where-Object { $_.PSIsContainer } | Select-Object -First 1
-Move-Item $folder.FullName $mysqlDir -Force
+Write-Host "Extraction de l'archive MySQL..."
+Expand-Archive -Path $zipPath -DestinationPath $unzipTemp -Force
 
-# Initialisation (sans mot de passe)
+# Trouver le dossier MySQL extrait (par exemple mysql-8.0.36-winx64)
+$extractedFolder = Get-ChildItem -Path $unzipTemp | Where-Object { $_.PSIsContainer } | Select-Object -First 1
+
+# Déplacement dans C:\MySQL
+Write-Host "Déplacement vers C:\MySQL..."
+Move-Item -Path $extractedFolder.FullName -Destination $mysqlDir -Force
+
+# Initialisation du dossier de données
+Write-Host "Initialisation de la base MySQL..."
 & "$mysqlDir\bin\mysqld.exe" --initialize-insecure --basedir="$mysqlDir" --datadir="$mysqlDir\data"
 
-# Ajout au service Windows
-& "$mysqlDir\bin\mysqld.exe" --install MySQL
-Start-Service MySQL
+# Lancement de MySQL en mode console
+Write-Host "Démarrage de MySQL..."
+Start-Process -FilePath "$mysqlDir\bin\mysqld.exe" -ArgumentList "--console --datadir=$mysqlDir\data --port=3306"
 
-# Démarrage de MySQL en arrière-plan
-Start-Process "$mysqlDir\bin\mysqld.exe" -ArgumentList "--console --datadir=$mysqlDir\data --port=3306"
-Start-Sleep -Seconds 10  # Laisse le temps au serveur de démarrer
-
-# Définir le mot de passe root
-& "$mysqlDir\bin\mysqladmin.exe" -u root password "Uk89Lu12&*"
-
-
+Write-Host "MySQL lancé avec succès sur le port 3306 sans mot de passe root."
