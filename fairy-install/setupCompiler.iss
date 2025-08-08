@@ -30,13 +30,17 @@ Source: "C:\Users\evandepoele\Downloads\Fairy_AI-main\Fairy_AI-main\fairy-instal
 Source: "C:\Users\evandepoele\Downloads\Fairy_AI-main\Fairy_AI-main\fairy-install\enable-scripts.ps1"; DestDir: "{tmp}"; Flags: deleteafterinstall
 Source: "C:\Users\evandepoele\Downloads\Fairy_AI-main\Fairy_AI-main\fairy-ai-api\setup.ps1"; DestDir: "{tmp}"; Flags: deleteafterinstall
 Source: "C:\Users\evandepoele\Downloads\Fairy_AI-main\Fairy_AI-main\fairy-install\python-3.11.0-amd64.exe"; DestDir: "{tmp}"; Flags: deleteafterinstall
-Source: "C:\Users\evandepoele\Downloads\Fairy_AI-main\Fairy_AI-main\fairy-install\mariadb\*"; DestDir: "{app}\mariadb"; Flags: recursesubdirs createallsubdirs
-Source: "C:\Users\evandepoele\Downloads\Fairy_AI-main\Fairy_AI-main\fairy-install\bdd-setup.ps1"; DestDir: "{tmp}"; Flags: deleteafterinstall
+Source: "C:\Users\evandepoele\Downloads\Fairy_AI-main\Fairy_AI-main\fairy-install\mysql.zip"; DestDir: "C:\temp"; Flags: ignoreversion
+Source: "C:\Users\evandepoele\Downloads\Fairy_AI-main\Fairy_AI-main\fairy-install\install-mysql.ps1"; DestDir: "{tmp}"; Flags: deleteafterinstall
+Source: "C:\Users\evandepoele\Downloads\Fairy_AI-main\Fairy_AI-main\fairy-install\frontend-setup.ps1"; DestDir: "{tmp}"; Flags: deleteafterinstall 
+Source: "C:\Users\evandepoele\Downloads\Fairy_AI-main\Fairy_AI-main\fairy-install\auth-api-setup.ps1"; DestDir: "{tmp}"; Flags: deleteafterinstall
 
 [Run]
 Filename: "msiexec.exe"; Parameters: "/i ""{tmp}\node-v22.18.0-x64.msi"" /quiet /norestart"; StatusMsg: "Installation de Node.js..."; Flags: runhidden
 Filename: "powershell.exe"; Parameters: "-ExecutionPolicy Bypass -File ""{tmp}\enable-scripts.ps1"""; StatusMsg: "Activation des scripts PowerShell..."; Flags: runhidden
 Filename: "{tmp}\python-3.11.0-amd64.exe"; Parameters: "InstallAllUsers=0 PrependPath=1 Include_test=0 TargetDir=""{userpf}\Python311"" /quiet InstallLauncherAllUsers=0"; StatusMsg: "Installation de Python 3.11.0..."; Flags: runhidden waituntilterminated
 Filename: "powershell.exe"; Parameters: "-ExecutionPolicy Bypass -File ""{tmp}\setup.ps1"""; StatusMsg: "Configuration de l'environnement Python..."; Flags: runhidden
-Filename: "powershell.exe"; Parameters: "-ExecutionPolicy Bypass -File ""{tmp}\bdd-setup.ps1"""; StatusMsg: "Création de la base de données MySQL..."; Flags: runhidden
+Filename: "powershell.exe"; Parameters: "-ExecutionPolicy Bypass -File ""{tmp}\install-mysql.ps1"""; StatusMsg: "Installation de MySQL..."; Flags: runhidden waituntilterminated
+Filename: "powershell.exe"; Parameters: "-ExecutionPolicy Bypass -File ""{tmp}\frontend-setup.ps1"""; StatusMsg: "Lancement du frontend..."; Flags: runhidden
+Filename: "powershell.exe"; Parameters: "-ExecutionPolicy Bypass -File ""{tmp}\auth-api-setup.ps1"""; StatusMsg: "Lancement du backend..."; Flags: runhidden
 
